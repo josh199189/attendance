@@ -412,7 +412,7 @@
   // ============================================================
   // ⚙️ 여기에 Google Apps Script 웹앱 URL을 입력하세요
   // ============================================================
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz3RDdw38YoS-GlIixKf8tDeV3OSPpGJzXwEf27i0nsXlMswU5wrCEIyiw7vmIaxvRGkQ/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzfanZRCesW3L-1MhzPpDYfkNE2h4lkkyvbPRT56gchgboxANthOcFrSwTdMfa_08OY/exec';
   // ============================================================
 
   function updateClock() {
@@ -496,13 +496,24 @@
     submitBtn.classList.add('loading-state');
     submitBtn.disabled = true;
 
-    // ✅ GPS 위치 검증
+    // ✅ GPS 위치 검증 + 좌표 수집
+    let userLat = '', userLng = '', mapLink = '';
     try {
-      await checkLocation();
+      const pos = await new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject,
+          { timeout: 10000, maximumAge: 0, enableHighAccuracy: true });
+      });
+      const dist = getDistance(pos.coords.latitude, pos.coords.longitude, OFFICE_LAT, OFFICE_LNG);
+      if (dist > OFFICE_RADIUS) {
+        throw new Error(`현재 위치가 생산실에서 ${Math.round(dist)}m 떨어져 있습니다.\n생산실 내에서만 등록 가능합니다. (허용 반경: ${OFFICE_RADIUS}m)`);
+      }
+      userLat = pos.coords.latitude.toFixed(6);
+      userLng = pos.coords.longitude.toFixed(6);
+      mapLink = `https://maps.google.com/?q=${userLat},${userLng}`;
     } catch(locErr) {
       submitBtn.classList.remove('loading-state');
       submitBtn.disabled = false;
-      errorMsg.textContent = '📍 ' + locErr;
+      errorMsg.textContent = '📍 ' + (locErr.message || locErr);
       errorMsg.classList.add('show');
       return;
     }
@@ -515,7 +526,10 @@
       company,
       phone: phone || '-',
       date: ts.date,
-      time: ts.time
+      time: ts.time,
+      lat: userLat,
+      lng: userLng,
+      maplink: mapLink
     });
 
     try {
