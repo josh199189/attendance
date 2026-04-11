@@ -1,6 +1,6 @@
-<!DAKfycbzfanZRCesW3L-1MhzPpDYfkNE2h4lkkyvbPRT56gchgboxANthOcFrSwTdMfa_08OYOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
-<heAKfycbzHqmKX1TVukMRhoO8ZSGNlJR8JoboXUihNbQVVJe2BZcige7QXVN3uXOucso-67eA5ad>
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>출근 체크인</title>
@@ -397,7 +397,12 @@
 
   <div class="field">
     <label>소속 업체명 *</label>
-    <input type="text" id="company" placeholder="예) OO종합 / OO인력" autocomplete="organization" inputmode="text">
+    <select id="company">
+      <option value="">-- 업체 선택 --</option>
+      <option value="A아웃소싱">A아웃소싱</option>
+      <option value="B아웃소싱">B아웃소싱</option>
+      <option value="C아웃소싱">C아웃소싱</option>
+    </select>
   </div>
 
   <div class="field">

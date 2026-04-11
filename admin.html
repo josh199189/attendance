@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>출퇴근 관리</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700;800;900&display=swap');
+  :root {
+    --bg:#F2F4F9; --white:#fff; --border:#E2E6F0;
+    --text:#1A1D2E; --muted:#8892B0;
+    --blue:#3D6FE8; --green:#00C851; --red:#FF4757; --orange:#FF6B00;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { font-family:'Noto Sans KR',sans-serif; background:var(--bg); min-height:100vh; }
+
+  /* 페이지 전환 */
+  .page { display:none; min-height:100vh; flex-direction:column; }
+  .page.active { display:flex; }
+
+  /* ══ 메인 헤더 ══ */
+  .hdr {
+    background:var(--blue); color:#fff;
+    padding:18px 16px 14px; position:sticky; top:0; z-index:10;
+  }
+  .hdr-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+  .hdr-top h1 { font-size:18px; font-weight:900; }
+  .hdr-top .dt { font-size:12px; opacity:.8; font-weight:600; }
+
+  /* 업체 탭 */
+  .ctabs { display:flex; gap:6px; }
+  .ctab {
+    flex:1; padding:7px 2px; border-radius:9px;
+    border:1.5px solid rgba(255,255,255,.3);
+    background:rgba(255,255,255,.1);
+    color:rgba(255,255,255,.7);
+    font-family:'Noto Sans KR',sans-serif;
+    font-size:12px; font-weight:700; cursor:pointer; text-align:center;
+  }
+  .ctab.active { background:#fff; color:var(--blue); border-color:#fff; }
+  .ctab .bc {
+    display:inline-block; background:var(--red); color:#fff;
+    border-radius:10px; padding:0 5px; font-size:10px; margin-left:2px;
+  }
+  .ctab.active .bc { background:var(--red); }
+
+  /* 날짜 바 */
+  .date-bar {
+    background:#fff; border-bottom:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between;
+    padding:10px 16px;
+  }
+  .date-nav { background:none; border:1px solid var(--border); border-radius:8px; padding:5px 12px; font-size:14px; cursor:pointer; color:var(--text); font-family:'Noto Sans KR',sans-serif; font-weight:600; }
+  .date-label { font-size:13px; font-weight:800; color:var(--text); }
+
+  /* 통계 */
+  .stat-row {
+    display:flex; gap:8px; padding:10px 12px;
+    background:#fff; border-bottom:1px solid var(--border);
+  }
+  .stat { flex:1; background:var(--bg); border-radius:10px; padding:8px; text-align:center; }
+  .stat .sn { font-size:20px; font-weight:900; }
+  .stat .sl { font-size:10px; color:var(--muted); font-weight:700; margin-top:1px; }
+  .stat.s-in .sn { color:var(--green); }
+  .stat.s-out .sn { color:var(--orange); }
+  .stat.s-wait .sn { color:#FFB800; }
+
+  /* 카드 리스트 */
+  .card-list { flex:1; overflow-y:auto; padding:10px 12px; display:flex; flex-direction:column; gap:8px; }
+
+  /* 직원 카드 - 출퇴근 통합 */
+  .emp-card {
+    background:var(--white); border-radius:14px;
+    border:1px solid var(--border); overflow:hidden;
+    box-shadow:0 1px 6px rgba(0,0,0,.05);
+  }
+  .emp-top {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 14px 10px; border-bottom:1px solid var(--border);
+  }
+  .emp-name { font-size:16px; font-weight:900; color:var(--text); }
+  .emp-co { font-size:11px; color:var(--muted); font-weight:600; margin-top:2px; }
+  .emp-status { display:flex; gap:4px; }
+  .es-dot { width:8px; height:8px; border-radius:50%; }
+  .es-dot.on { background:var(--green); }
+  .es-dot.off { background:var(--border); }
+
+  /* 출근/퇴근 행 */
+  .emp-rows { display:flex; gap:0; }
+  .emp-row {
+    flex:1; padding:10px 12px;
+    display:flex; flex-direction:column; gap:6px;
+  }
+  .emp-row:first-child { border-right:1px solid var(--border); }
+  .er-label {
+    display:flex; align-items:center; gap:5px;
+    font-size:11px; font-weight:800; color:var(--muted);
+  }
+  .er-dot { width:7px; height:7px; border-radius:50%; }
+  .er-dot.in { background:var(--green); }
+  .er-dot.out { background:var(--orange); }
+  .er-time { font-size:15px; font-weight:900; color:var(--text); }
+  .er-none { font-size:12px; color:var(--border); font-weight:600; }
+
+  /* 승인 버튼 - 작게 */
+  .er-btn {
+    padding:5px 10px; border-radius:8px;
+    font-family:'Noto Sans KR',sans-serif;
+    font-size:11px; font-weight:800; cursor:pointer; border:none;
+    align-self:flex-start;
+  }
+  .er-btn.ok { background:rgba(0,200,81,.1); color:var(--green); border:1px solid rgba(0,200,81,.3); }
+  .er-btn.no { background:rgba(255,71,87,.07); color:var(--red); border:1px solid rgba(255,71,87,.25); }
+  .er-btn.done-ok { background:rgba(0,200,81,.08); color:var(--green); border:1px solid rgba(0,200,81,.2); opacity:.7; font-size:10px; }
+  .er-btn.done-no { background:rgba(255,71,87,.06); color:var(--red); border:1px solid rgba(255,71,87,.2); opacity:.7; font-size:10px; }
+
+  /* 지도 링크 */
+  .map-link { font-size:10px; color:var(--blue); text-decoration:none; font-weight:700; }
+
+  /* 빈 상태 */
+  .empty { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; color:var(--muted); gap:12px; }
+  .empty .ei { font-size:52px; }
+  .empty p { font-size:14px; font-weight:600; text-align:center; line-height:1.8; }
+
+  /* 로딩 */
+  .loading-wrap { flex:1; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:12px; color:var(--muted); }
+  @keyframes spin { to { transform:rotate(360deg); } }
+  .spinner { width:28px; height:28px; border:3px solid var(--border); border-top-color:var(--blue); border-radius:50%; animation:spin .7s linear infinite; }
+
+  /* FAB */
+  .fab { position:fixed; bottom:20px; right:16px; width:50px; height:50px; border-radius:50%; background:var(--blue); border:none; color:#fff; font-size:22px; cursor:pointer; box-shadow:0 4px 16px rgba(61,111,232,.4); display:flex; align-items:center; justify-content:center; z-index:20; transition:transform .2s; }
+  .fab:active { transform:scale(.88) rotate(180deg); }
+
+  /* ══ 완료 페이지 ══ */
+  .done-hdr { background:#fff; padding:14px 16px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; }
+  .back-btn { width:34px; height:34px; border-radius:50%; background:var(--bg); border:none; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .done-hdr h2 { font-size:16px; font-weight:900; color:var(--text); }
+  .done-body { padding:24px 18px; }
+  .done-icon { width:72px; height:72px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:34px; margin:0 auto 16px; }
+  .done-icon.ok { background:rgba(0,200,81,.1); }
+  .done-icon.no { background:rgba(255,71,87,.1); }
+  .done-ttl { text-align:center; font-size:20px; font-weight:900; margin-bottom:4px; }
+  .done-ttl.ok { color:var(--green); }
+  .done-ttl.no { color:var(--red); }
+  .done-sub { text-align:center; font-size:12px; color:var(--muted); margin-bottom:24px; }
+  .info-card { background:var(--bg); border-radius:14px; padding:16px; display:flex; flex-direction:column; gap:12px; }
+  .ir { display:flex; justify-content:space-between; align-items:center; }
+  .ir .k { font-size:12px; color:var(--muted); font-weight:700; }
+  .ir .v { font-size:13px; color:var(--text); font-weight:800; }
+  .ir .v a { color:var(--blue); text-decoration:none; }
+  .done-back { width:100%; margin-top:18px; padding:14px; background:var(--blue); border:none; border-radius:13px; color:#fff; font-family:'Noto Sans KR',sans-serif; font-size:14px; font-weight:800; cursor:pointer; }
+</style>
+</head>
+<body>
+
+<!-- ══ 메인 ══ -->
+<div class="page active" id="mainPage">
+  <div class="hdr">
+    <div class="hdr-top">
+      <h1>🏭 출퇴근 관리</h1>
+      <span class="dt" id="todayTxt"></span>
+    </div>
+    <div class="ctabs">
+      <button class="ctab active" onclick="switchCo('all',this)">전체 <span class="bc" id="bc-all">0</span></button>
+      <button class="ctab" onclick="switchCo('A아웃소싱',this)">A <span class="bc" id="bc-A">0</span></button>
+      <button class="ctab" onclick="switchCo('B아웃소싱',this)">B <span class="bc" id="bc-B">0</span></button>
+      <button class="ctab" onclick="switchCo('C아웃소싱',this)">C <span class="bc" id="bc-C">0</span></button>
+    </div>
+  </div>
+
+  <div class="date-bar">
+    <button class="date-nav" onclick="changeDate(-1)">◀ 전날</button>
+    <span class="date-label" id="dateLbl"></span>
+    <button class="date-nav" onclick="changeDate(1)">다음날 ▶</button>
+  </div>
+
+  <div class="stat-row" id="statRow"></div>
+
+  <div class="card-list" id="cardList">
+    <div class="loading-wrap"><div class="spinner"></div><span>불러오는 중...</span></div>
+  </div>
+</div>
+
+<!-- ══ 완료 페이지 ══ -->
+<div class="page" id="donePage">
+  <div class="done-hdr">
+    <button class="back-btn" onclick="goBack()">←</button>
+    <h2 id="doneHdrTxt"></h2>
+  </div>
+  <div class="done-body">
+    <div class="done-icon" id="doneIco"></div>
+    <div class="done-ttl" id="doneTtl"></div>
+    <div class="done-sub" id="doneSub"></div>
+    <div class="info-card" id="doneInfo"></div>
+    <button class="done-back" onclick="goBack()">← 목록으로</button>
+  </div>
+</div>
+
+<button class="fab" id="fab" onclick="loadData()">↻</button>
+
+<script>
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzHqmKX1TVukMRhoO8ZSGNlJR8JoboXUihNbQVVJe2BZcige7QXVN3uXOucso-67eA5/exec';
+
+let allData = [];
+let currentCo = 'all';
+let viewDate = new Date();
+
+function fmtDate(d) {
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+}
+function fmtDateKr(d) {
+  const days=['일','월','화','수','목','금','토'];
+  return `${d.getMonth()+1}월 ${d.getDate()}일 (${days[d.getDay()]})`;
+}
+function isToday(d) { return fmtDate(d) === fmtDate(new Date()); }
+
+function updateDateUI() {
+  document.getElementById('todayTxt').textContent = isToday(viewDate) ? '오늘' : fmtDateKr(viewDate);
+  document.getElementById('dateLbl').textContent = fmtDateKr(viewDate) + (isToday(viewDate) ? ' 🔴' : '');
+}
+
+function changeDate(n) {
+  viewDate.setDate(viewDate.getDate() + n);
+  updateDateUI();
+  loadData();
+}
+
+async function loadData() {
+  document.getElementById('fab').style.transform = 'rotate(180deg)';
+  document.getElementById('cardList').innerHTML = `<div class="loading-wrap"><div class="spinner"></div><span>불러오는 중...</span></div>`;
+
+  const dateStr = fmtDate(viewDate);
+  try {
+    const res = await fetch(`${SCRIPT_URL}?action=getList&date=${dateStr}`);
+    const data = await res.json();
+    allData = data.rows || [];
+  } catch(e) {
+    // 샘플 데이터
+    allData = [
+      {row:2, type:'출근', name:'홍길동', company:'A아웃소싱', phone:'010-1234-5678', date:dateStr, time:'08:30:00', maplink:'https://maps.google.com/?q=37.3153,126.7877', timestamp:dateStr+' 08:30:01', status:'대기'},
+      {row:3, type:'퇴근', name:'홍길동', company:'A아웃소싱', phone:'010-1234-5678', date:dateStr, time:'17:30:00', maplink:'https://maps.google.com/?q=37.3153,126.7877', timestamp:dateStr+' 17:30:02', status:'대기'},
+      {row:4, type:'출근', name:'김철수', company:'B아웃소싱', phone:'010-2345-6789', date:dateStr, time:'08:45:00', maplink:'https://maps.google.com/?q=37.3153,126.7877', timestamp:dateStr+' 08:45:03', status:'승인'},
+      {row:5, type:'출근', name:'이영희', company:'C아웃소싱', phone:'010-3456-7890', date:dateStr, time:'09:00:00', maplink:'https://maps.google.com/?q=37.3153,126.7877', timestamp:dateStr+' 09:00:04', status:'대기'},
+      {row:6, type:'퇴근', name:'이영희', company:'C아웃소싱', phone:'010-3456-7890', date:dateStr, time:'18:00:00', maplink:'https://maps.google.com/?q=37.3153,126.7877', timestamp:dateStr+' 18:00:05', status:'반려'},
+    ];
+  }
+
+  updateCounts();
+  render();
+  setTimeout(() => document.getElementById('fab').style.transform = '', 400);
+}
+
+// 이름+업체 기준으로 그룹핑
+function groupData(data) {
+  const map = {};
+  data.forEach(r => {
+    const key = `${r.name}__${r.company}`;
+    if (!map[key]) map[key] = { name:r.name, company:r.company, phone:r.phone, checkin:null, checkout:null };
+    if (r.type === '출근') map[key].checkin = r;
+    else map[key].checkout = r;
+  });
+  return Object.values(map);
+}
+
+function updateCounts() {
+  // 대기 중인 건수
+  const pending = (co) => allData.filter(r => r.status==='대기' && (co==='all'||r.company===co)).length;
+  document.getElementById('bc-all').textContent = pending('all');
+  document.getElementById('bc-A').textContent = pending('A아웃소싱');
+  document.getElementById('bc-B').textContent = pending('B아웃소싱');
+  document.getElementById('bc-C').textContent = pending('C아웃소싱');
+
+  // 통계
+  const ins = allData.filter(r=>r.type==='출근').length;
+  const outs = allData.filter(r=>r.type==='퇴근').length;
+  const waits = allData.filter(r=>r.status==='대기').length;
+  document.getElementById('statRow').innerHTML = `
+    <div class="stat s-in"><div class="sn">${ins}</div><div class="sl">🟢 출근</div></div>
+    <div class="stat s-out"><div class="sn">${outs}</div><div class="sl">🟠 퇴근</div></div>
+    <div class="stat s-wait"><div class="sn">${waits}</div><div class="sl">⏳ 대기</div></div>
+  `;
+}
+
+function switchCo(co, el) {
+  currentCo = co;
+  document.querySelectorAll('.ctab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+
+function render() {
+  let data = [...allData];
+  if (currentCo !== 'all') data = data.filter(r => r.company === currentCo);
+
+  const groups = groupData(data);
+
+  // 대기 있는 그룹 먼저
+  groups.sort((a,b) => {
+    const aWait = (a.checkin?.status==='대기'||a.checkout?.status==='대기') ? 0:1;
+    const bWait = (b.checkin?.status==='대기'||b.checkout?.status==='대기') ? 0:1;
+    return aWait - bWait;
+  });
+
+  if (groups.length === 0) {
+    document.getElementById('cardList').innerHTML = `<div class="empty"><div class="ei">📋</div><p>이 날 등록된 데이터가 없습니다.</p></div>`;
+    return;
+  }
+
+  document.getElementById('cardList').innerHTML = groups.map(g => {
+    const ci = g.checkin;
+    const co = g.checkout;
+    const ciDot = ci ? 'on' : 'off';
+    const coDot = co ? 'on' : 'off';
+
+    const renderRow = (r, type) => {
+      if (!r) return `
+        <div class="emp-row">
+          <div class="er-label"><div class="er-dot ${type==='출근'?'in':'out'}"></div>${type}</div>
+          <span class="er-none">미등록</span>
+        </div>`;
+
+      const isPending = r.status === '대기';
+      return `
+        <div class="emp-row">
+          <div class="er-label"><div class="er-dot ${type==='출근'?'in':'out'}"></div>${type}</div>
+          <span class="er-time">${r.time.substring(0,5)}</span>
+          ${r.maplink && r.maplink!=='-' ? `<a href="${r.maplink}" target="_blank" class="map-link">📍 위치</a>` : ''}
+          ${isPending
+            ? `<button class="er-btn ok" onclick="doAction(${r.row},'승인',event)">✅ 승인</button>
+               <button class="er-btn no" onclick="doAction(${r.row},'반려',event)">❌ 반려</button>`
+            : `<button class="er-btn ${r.status==='승인'?'done-ok':'done-no'}" disabled>${r.status==='승인'?'✅ 승인됨':'❌ 반려됨'}</button>`
+          }
+        </div>`;
+    };
+
+    return `
+      <div class="emp-card">
+        <div class="emp-top">
+          <div>
+            <div class="emp-name">${g.name}</div>
+            <div class="emp-co">${g.company} · ${g.phone}</div>
+          </div>
+          <div class="emp-status">
+            <div class="es-dot ${ciDot}" title="출근"></div>
+            <div class="es-dot ${coDot}" title="퇴근"></div>
+          </div>
+        </div>
+        <div class="emp-rows">
+          ${renderRow(ci,'출근')}
+          ${renderRow(co,'퇴근')}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+async function doAction(row, status, event) {
+  event.stopPropagation();
+  const item = allData.find(r => r.row === row);
+  if (!item) return;
+
+  showDonePage(item, status);
+  item.status = status;
+  updateCounts();
+
+  try {
+    await fetch(`${SCRIPT_URL}?action=${status==='승인'?'approve':'reject'}&row=${row}`, { mode:'no-cors' });
+  } catch(e) {}
+}
+
+function showDonePage(item, status) {
+  const ok = status === '승인';
+  document.getElementById('doneIco').className = `done-icon ${ok?'ok':'no'}`;
+  document.getElementById('doneIco').textContent = ok ? '✅' : '❌';
+  document.getElementById('doneHdrTxt').textContent = ok ? '✅ 승인 완료' : '❌ 반려 처리';
+  document.getElementById('doneTtl').className = `done-ttl ${ok?'ok':'no'}`;
+  document.getElementById('doneTtl').textContent = ok ? '승인 완료' : '반려 처리';
+  document.getElementById('doneSub').textContent = `${item.name}님의 ${item.type}이 ${ok?'승인':'반려'}되었습니다.`;
+  document.getElementById('doneInfo').innerHTML = `
+    <div class="ir"><span class="k">구분</span><span class="v">${item.type}</span></div>
+    <div class="ir"><span class="k">이름</span><span class="v">${item.name}</span></div>
+    <div class="ir"><span class="k">소속</span><span class="v">${item.company}</span></div>
+    <div class="ir"><span class="k">연락처</span><span class="v">${item.phone}</span></div>
+    <div class="ir"><span class="k">시간</span><span class="v">${item.time}</span></div>
+    <div class="ir"><span class="k">등록일시</span><span class="v">${item.timestamp}</span></div>
+    ${item.maplink&&item.maplink!=='-'?`<div class="ir"><span class="k">위치</span><span class="v"><a href="${item.maplink}" target="_blank">📍 지도 보기</a></span></div>`:''}
+  `;
+  document.getElementById('mainPage').classList.remove('active');
+  document.getElementById('donePage').classList.add('active');
+  document.getElementById('fab').style.display='none';
+}
+
+function goBack() {
+  document.getElementById('donePage').classList.remove('active');
+  document.getElementById('mainPage').classList.add('active');
+  document.getElementById('fab').style.display='flex';
+  render();
+}
+
+// 초기화
+updateDateUI();
+loadData();
+setInterval(() => { if(isToday(viewDate)) loadData(); }, 30000);
+</script>
+</body>
+</html>
