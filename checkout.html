@@ -3,574 +3,100 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>퇴근 체크아웃</title>
+<title>퇴근 등록</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;800;900&family=Bebas+Neue&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#070b14;--surface:#0d1525;--surface-2:#131e33;
+  --border:#1c2d4e;--border-focus:#4a8aeb;
+  --text:#dfe6f2;--text-dim:#7a8baa;--text-muted:#4a5a78;
+  --blue:#5b9cf6;--blue-dark:#3d7de8;--blue-glow:rgba(91,156,246,.22);
+  --font:'Noto Sans KR',-apple-system,sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+  --radius:16px;--radius-sm:11px;
+}
+html,body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100dvh;-webkit-font-smoothing:antialiased}
+body{background:radial-gradient(ellipse at 50% -15%,rgba(91,156,246,.09) 0%,transparent 60%),radial-gradient(ellipse at 30% 100%,rgba(99,102,241,.05) 0%,transparent 50%),var(--bg)}
+.app{max-width:420px;margin:0 auto;padding:24px 16px 48px}
 
-  :root {
-    --orange: #FF6B00;
-    --orange-dark: #CC5500;
-    --orange-light: #FFF3E8;
-    --bg: #16100A;
-    --card: #1E1510;
-    --border: #3A2A18;
-    --text: #FFF4EC;
-    --muted: #9B7A5A;
-  }
+.hdr{text-align:center;padding:24px 0 12px}
+.hdr-icon{width:72px;height:72px;margin:0 auto 16px;background:linear-gradient(135deg,var(--blue),var(--blue-dark));border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:34px;box-shadow:0 8px 40px var(--blue-glow)}
+.hdr h1{font-size:28px;font-weight:900;letter-spacing:-1px;color:#fff}
+.hdr .sub{font-size:13px;color:var(--text-dim);margin-top:4px}
 
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+.clock-wrap{text-align:center;margin:20px 0 28px}
+.clock{font-family:var(--mono);font-size:48px;font-weight:600;color:#fff;letter-spacing:3px;line-height:1}
+.clock-date{font-size:13px;color:var(--text-dim);margin-top:6px}
 
-  body {
-    font-family: 'Noto Sans KR', sans-serif;
-    background: var(--bg);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 0 0 40px 0;
-    position: relative;
-    overflow-x: hidden;
-  }
+.gps{display:flex;align-items:center;gap:9px;padding:12px 16px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:20px;font-size:12px;color:var(--text-dim)}
+.gps-dot{width:8px;height:8px;border-radius:50%;background:var(--text-muted);flex-shrink:0}
+.gps-dot.ok{background:#00d68f;box-shadow:0 0 10px rgba(0,214,143,.3);animation:pulse 2s infinite}
+.gps-dot.err{background:#ff5252}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
-  body::before {
-    content: '';
-    position: fixed;
-    top: -200px; right: -200px;
-    width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(255,107,0,0.1) 0%, transparent 70%);
-    pointer-events: none;
-    z-index: 0;
-  }
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;box-shadow:0 4px 32px rgba(0,0,0,.4)}
 
-  .header {
-    width: 100%;
-    background: linear-gradient(135deg, var(--orange-dark), var(--orange));
-    padding: 28px 24px 24px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 4px 30px rgba(255,107,0,0.4);
-  }
+.field{margin-bottom:16px}
+.field label{display:block;font-size:12px;font-weight:600;color:var(--text-dim);margin-bottom:6px;letter-spacing:.3px}
+.field input{width:100%;padding:14px 16px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:var(--font);font-size:16px;outline:none;transition:border-color .2s,box-shadow .2s}
+.field input:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px var(--blue-glow)}
+.field input::placeholder{color:var(--text-muted)}
 
-  .header::before {
-    content: '';
-    position: absolute;
-    bottom: -50%; left: -30%;
-    width: 200px; height: 200px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 50%;
-  }
+.btn{width:100%;padding:18px;border:none;border-radius:var(--radius-sm);font-family:var(--font);font-size:17px;font-weight:800;cursor:pointer;transition:all .2s;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff;box-shadow:0 6px 28px var(--blue-glow)}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
 
-  .header-badge {
-    display: inline-block;
-    background: rgba(255,255,255,0.2);
-    border: 1px solid rgba(255,255,255,0.35);
-    color: #fff;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 3px;
-    padding: 4px 14px;
-    border-radius: 20px;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-  }
+.toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-130px);max-width:380px;width:calc(100% - 32px);padding:16px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;z-index:999;transition:transform .35s cubic-bezier(.4,0,.2,1);box-shadow:0 8px 32px rgba(0,0,0,.5)}
+.toast.show{transform:translateX(-50%) translateY(0)}
+.toast.success{background:#0d2733;border:1px solid rgba(0,214,143,.35);color:#00d68f}
+.toast.error{background:#331015;border:1px solid rgba(255,82,82,.35);color:#ff5252}
 
-  .header h1 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 52px;
-    color: #fff;
-    letter-spacing: 4px;
-    line-height: 1;
-    text-shadow: 0 2px 20px rgba(0,0,0,0.3);
-  }
-
-  .header .subtitle {
-    color: rgba(255,255,255,0.85);
-    font-size: 13px;
-    font-weight: 600;
-    margin-top: 6px;
-    letter-spacing: 1px;
-  }
-
-  .time-display {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    margin: 20px 16px 0;
-    padding: 16px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: relative;
-    z-index: 1;
-  }
-
-  .time-left .label {
-    font-size: 10px;
-    color: var(--muted);
-    font-weight: 700;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-  }
-
-  .time-left .date-str {
-    font-size: 14px;
-    color: var(--text);
-    font-weight: 600;
-    margin-top: 2px;
-  }
-
-  .time-right .clock {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 36px;
-    color: var(--orange);
-    letter-spacing: 2px;
-    line-height: 1;
-  }
-
-  .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    margin: 14px 16px 0;
-    padding: 22px 20px;
-    position: relative;
-    z-index: 1;
-  }
-
-  .card-title {
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 2.5px;
-    color: var(--orange);
-    text-transform: uppercase;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .card-title::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
-
-  .field { margin-bottom: 14px; }
-
-  .field label {
-    display: block;
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--muted);
-    letter-spacing: 1px;
-    margin-bottom: 7px;
-    text-transform: uppercase;
-  }
-
-  .field input, .field select {
-    width: 100%;
-    background: rgba(255,255,255,0.04);
-    border: 1.5px solid var(--border);
-    border-radius: 12px;
-    padding: 13px 16px;
-    font-size: 16px;
-    font-family: 'Noto Sans KR', sans-serif;
-    color: var(--text);
-    outline: none;
-    transition: border-color 0.2s, background 0.2s;
-    appearance: none;
-    -webkit-appearance: none;
-  }
-
-  .field input:focus, .field select:focus {
-    border-color: var(--orange);
-    background: rgba(255,107,0,0.06);
-  }
-
-  .field input::placeholder { color: #5A3A20; }
-  .field select option { background: #2a1a0a; color: var(--text); }
-
-  .submit-btn {
-    width: calc(100% - 32px);
-    margin: 16px 16px 0;
-    padding: 18px;
-    background: linear-gradient(135deg, var(--orange), #E05500);
-    border: none;
-    border-radius: 16px;
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 18px;
-    font-weight: 800;
-    color: #fff;
-    letter-spacing: 2px;
-    cursor: pointer;
-    position: relative;
-    z-index: 1;
-    box-shadow: 0 6px 30px rgba(255,107,0,0.45);
-    transition: transform 0.15s, box-shadow 0.15s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-  }
-
-  .submit-btn:active {
-    transform: scale(0.97);
-    box-shadow: 0 3px 15px rgba(255,107,0,0.3);
-  }
-
-  .submit-btn .icon { font-size: 20px; }
-
-  .success-screen {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: var(--bg);
-    z-index: 100;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 40px 24px;
-    text-align: center;
-  }
-
-  .success-screen.show { display: flex; }
-
-  .success-circle {
-    width: 120px; height: 120px;
-    background: linear-gradient(135deg, var(--orange), #E05500);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 52px;
-    margin-bottom: 28px;
-    box-shadow: 0 0 60px rgba(255,107,0,0.5);
-    animation: pop 0.4s cubic-bezier(0.34,1.56,0.64,1);
-  }
-
-  @keyframes pop {
-    from { transform: scale(0); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
-  }
-
-  .success-screen h2 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 44px;
-    color: var(--orange);
-    letter-spacing: 4px;
-    margin-bottom: 10px;
-  }
-
-  .success-screen p {
-    color: var(--muted);
-    font-size: 15px;
-    line-height: 1.7;
-  }
-
-  .success-info {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 18px 24px;
-    margin-top: 24px;
-    width: 100%;
-    max-width: 320px;
-    text-align: left;
-  }
-
-  .success-info .row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 7px 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 14px;
-  }
-
-  .success-info .row:last-child { border-bottom: none; }
-  .success-info .row .key { color: var(--muted); font-weight: 600; }
-  .success-info .row .val { color: var(--text); font-weight: 700; }
-
-  .reset-btn {
-    margin-top: 28px;
-    padding: 14px 32px;
-    background: transparent;
-    border: 1.5px solid var(--border);
-    border-radius: 12px;
-    color: var(--muted);
-    font-family: 'Noto Sans KR', sans-serif;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: border-color 0.2s, color 0.2s;
-  }
-
-  .reset-btn:active { border-color: var(--orange); color: var(--orange); }
-
-  .loading { display: none; }
-  .submit-btn.loading-state .loading { display: inline-block; }
-  .submit-btn.loading-state .btn-text { display: none; }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .spinner {
-    width: 22px; height: 22px;
-    border: 3px solid rgba(255,255,255,0.3);
-    border-top-color: #fff;
-    border-radius: 50%;
-    animation: spin 0.7s linear infinite;
-  }
-
-  .error-msg {
-    display: none;
-    background: rgba(255,80,80,0.1);
-    border: 1px solid rgba(255,80,80,0.3);
-    color: #FF6B6B;
-    border-radius: 10px;
-    padding: 10px 14px;
-    font-size: 13px;
-    margin: 10px 16px 0;
-    position: relative;
-    z-index: 1;
-  }
-  .error-msg.show { display: block; }
-
-  .notice {
-    color: var(--muted);
-    font-size: 11px;
-    text-align: center;
-    margin: 16px 16px 0;
-    line-height: 1.8;
-    position: relative;
-    z-index: 1;
-  }
+.spinner{display:inline-block;width:18px;height:18px;border:2.5px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
-
-<div class="header">
-  <div class="header-badge">생산실 · 외주인력</div>
-  <h1>퇴 근</h1>
-  <div class="subtitle">CHECK OUT · 퇴근 등록</div>
-</div>
-
-<div class="time-display">
-  <div class="time-left">
-    <div class="label">오늘 날짜</div>
-    <div class="date-str" id="dateStr">—</div>
+<div class="app">
+  <div class="hdr">
+    <div class="hdr-icon">👋</div>
+    <h1>퇴근 등록</h1>
+    <div class="sub">수고하셨습니다! 퇴근 정보를 입력해주세요</div>
   </div>
-  <div class="time-right">
-    <div class="clock" id="clockStr">00:00:00</div>
+  <div class="clock-wrap">
+    <div class="clock" id="clock">--:--:--</div>
+    <div class="clock-date" id="clock-date">-</div>
   </div>
-</div>
-
-<div class="card">
-  <div class="card-title">기본 정보 입력</div>
-
-  <div class="field">
-    <label>이름 *</label>
-    <input type="text" id="name" placeholder="홍길동" autocomplete="name" inputmode="text">
-  </div>
-
-  <div class="field">
-    <label>소속 업체명 *</label>
-    <select id="company">
-      <option value="">-- 업체 선택 --</option>
-      <option value="A아웃소싱">A아웃소싱</option>
-      <option value="B아웃소싱">B아웃소싱</option>
-      <option value="C아웃소싱">C아웃소싱</option>
-    </select>
-  </div>
-
-  <div class="field">
-    <label>연락처 (선택)</label>
-    <input type="tel" id="phone" placeholder="010-0000-0000" inputmode="tel">
+  <div class="card">
+    <div class="gps"><div class="gps-dot" id="gps-dot"></div><span id="gps-txt">GPS 위치 확인 중...</span></div>
+    <div class="field"><label>이름 *</label><input type="text" id="f-name" placeholder="홍길동" autocomplete="name"></div>
+    <div class="field"><label>전화번호 *</label><input type="tel" id="f-phone" placeholder="010-1234-5678" autocomplete="tel"></div>
+    <button class="btn" id="btn" onclick="submit()">👋 퇴근 등록</button>
   </div>
 </div>
-
-<div class="error-msg" id="errorMsg">⚠️ 이름과 소속 업체명은 필수입니다.</div>
-
-<button class="submit-btn" id="submitBtn" onclick="submitForm()">
-  <span class="btn-text"><span class="icon">🏁</span> 퇴근 등록하기</span>
-  <div class="loading"><div class="spinner"></div></div>
-</button>
-
-<div class="notice">
-  📌 퇴근 시 반드시 등록해 주세요.<br>
-  수고 많으셨습니다! 안전하게 귀가하세요. 🙏
-</div>
-
-<div class="success-screen" id="successScreen">
-  <div class="success-circle">🏁</div>
-  <h2>퇴근 완료</h2>
-  <p>퇴근이 정상적으로 등록되었습니다.<br>수고 많으셨습니다!</p>
-
-  <div class="success-info" id="successInfo"></div>
-
-  <button class="reset-btn" onclick="resetForm()">← 다시 등록하기</button>
-</div>
-
+<div class="toast" id="toast"></div>
 <script>
-  // ============================================================
-  // ⚙️ 여기에 Google Apps Script 웹앱 URL을 입력하세요
-  // ============================================================
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwGc4mQPTESVNQwnm4InH8R1usioLmkZQ__DG3K9x_2ToT4kY-s2zR0F1juct8ZUuvC/exec';
-  // ============================================================
+// ★ Apps Script 배포 URL ★
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbw8Qi5OjJu9QuDny7zN9pp66Fi7Hx5YfRA43Qkx64BaScPZzyM34_xoRu3RRwjhcAKJ/exec';
 
-  function updateClock() {
-    const now = new Date();
-    const days = ['일','월','화','수','목','금','토'];
-    const y = now.getFullYear();
-    const m = String(now.getMonth()+1).padStart(2,'0');
-    const d = String(now.getDate()).padStart(2,'0');
-    const day = days[now.getDay()];
-    document.getElementById('dateStr').textContent = `${y}년 ${m}월 ${d}일 (${day})`;
-    const h = String(now.getHours()).padStart(2,'0');
-    const min = String(now.getMinutes()).padStart(2,'0');
-    const s = String(now.getSeconds()).padStart(2,'0');
-    document.getElementById('clockStr').textContent = `${h}:${min}:${s}`;
-  }
-  updateClock();
-  setInterval(updateClock, 1000);
+let lat=null,lng=null;
+document.addEventListener('DOMContentLoaded',()=>{tick();setInterval(tick,1000);getGPS();restore()});
 
-  function getTimestamp() {
-    const now = new Date();
-    const y = now.getFullYear();
-    const m = String(now.getMonth()+1).padStart(2,'0');
-    const d = String(now.getDate()).padStart(2,'0');
-    const h = String(now.getHours()).padStart(2,'0');
-    const min = String(now.getMinutes()).padStart(2,'0');
-    const s = String(now.getSeconds()).padStart(2,'0');
-    return { date: `${y}-${m}-${d}`, time: `${h}:${min}:${s}`, dateKr: `${y}년 ${m}월 ${d}일` };
-  }
+function tick(){const n=new Date();document.getElementById('clock').textContent=n.toLocaleTimeString('ko-KR',{hour12:false});document.getElementById('clock-date').textContent=n.toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'long'})}
+function getGPS(){if(!navigator.geolocation){sg('err','GPS 미지원');return}navigator.geolocation.getCurrentPosition(p=>{lat=p.coords.latitude;lng=p.coords.longitude;sg('ok',`위치 확인됨 (±${Math.round(p.coords.accuracy)}m)`)},e=>{sg('err',e.code===1?'GPS 권한을 허용해주세요':'GPS를 가져올 수 없습니다')},{enableHighAccuracy:true,timeout:15000})}
+function sg(s,t){document.getElementById('gps-dot').className='gps-dot '+s;document.getElementById('gps-txt').textContent=t}
 
-  // ✅ GPS 설정 - 생산실 위치
-  const OFFICE_LAT = 37.3153155;
-  const OFFICE_LNG = 126.7877251;
-  const OFFICE_RADIUS = 100; // 허용 반경 (미터)
+async function submit(){
+  const name=document.getElementById('f-name').value.trim(),phone=document.getElementById('f-phone').value.trim();
+  if(!name||!phone)return toast('이름과 전화번호를 입력해주세요.','error');
+  const btn=document.getElementById('btn');btn.disabled=true;btn.innerHTML='<span class="spinner"></span> 처리 중...';
+  try{const p=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{enableHighAccuracy:true,timeout:10000}));lat=p.coords.latitude;lng=p.coords.longitude}catch(e){}
+  try{const r=await fetch(SCRIPT_URL,{method:'POST',body:JSON.stringify({action:'checkOut',name,phone,lat,lng}),redirect:'follow'});const res=await r.json();if(res.success){toast(res.message,'success')}else toast(res.message,'error')}catch(e){toast('서버 연결 실패','error')}
+  btn.disabled=false;btn.innerHTML='👋 퇴근 등록';
+}
 
-  function getDistance(lat1, lng1, lat2, lng2) {
-    const R = 6371000;
-    const dLat = (lat2 - lat1) * Math.PI / 180;
-    const dLng = (lng2 - lng1) * Math.PI / 180;
-    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-              Math.sin(dLng/2) * Math.sin(dLng/2);
-    return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-  }
-
-  function checkLocation() {
-    return new Promise((resolve, reject) => {
-      if (!navigator.geolocation) {
-        reject('GPS를 지원하지 않는 기기입니다.');
-        return;
-      }
-      navigator.geolocation.getCurrentPosition(
-        pos => {
-          const dist = getDistance(pos.coords.latitude, pos.coords.longitude, OFFICE_LAT, OFFICE_LNG);
-          if (dist <= OFFICE_RADIUS) {
-            resolve(dist);
-          } else {
-            reject(`현재 위치가 생산실에서 ${Math.round(dist)}m 떨어져 있습니다.\n생산실 내에서만 등록 가능합니다. (허용 반경: ${OFFICE_RADIUS}m)`);
-          }
-        },
-        err => {
-          reject('위치 정보를 가져올 수 없습니다.\n위치 권한을 허용해 주세요.');
-        },
-        { timeout: 10000, maximumAge: 0, enableHighAccuracy: true }
-      );
-    });
-  }
-
-  async function submitForm() {
-    const name = document.getElementById('name').value.trim();
-    const company = document.getElementById('company').value.trim();
-    const phone = document.getElementById('phone').value.trim();
-    const errorMsg = document.getElementById('errorMsg');
-    const submitBtn = document.getElementById('submitBtn');
-
-    if (!name || !company) {
-      errorMsg.classList.add('show');
-      return;
-    }
-    errorMsg.classList.remove('show');
-
-    submitBtn.classList.add('loading-state');
-    submitBtn.disabled = true;
-
-    // ✅ GPS 위치 검증 + 좌표 수집
-    let userLat = '', userLng = '', mapLink = '';
-    try {
-      const pos = await new Promise((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject,
-          { timeout: 10000, maximumAge: 0, enableHighAccuracy: true });
-      });
-      const dist = getDistance(pos.coords.latitude, pos.coords.longitude, OFFICE_LAT, OFFICE_LNG);
-      if (dist > OFFICE_RADIUS) {
-        throw new Error(`현재 위치가 생산실에서 ${Math.round(dist)}m 떨어져 있습니다.\n생산실 내에서만 등록 가능합니다. (허용 반경: ${OFFICE_RADIUS}m)`);
-      }
-      userLat = pos.coords.latitude.toFixed(6);
-      userLng = pos.coords.longitude.toFixed(6);
-      mapLink = `https://maps.google.com/?q=${userLat},${userLng}`;
-    } catch(locErr) {
-      submitBtn.classList.remove('loading-state');
-      submitBtn.disabled = false;
-      errorMsg.textContent = '📍 ' + (locErr.message || locErr);
-      errorMsg.classList.add('show');
-      return;
-    }
-
-    const ts = getTimestamp();
-
-    const params = new URLSearchParams({
-      type: '퇴근',
-      name,
-      company,
-      phone: phone || '-',
-      date: ts.date,
-      time: ts.time,
-      lat: userLat,
-      lng: userLng,
-      maplink: mapLink
-    });
-
-    try {
-      await fetch(`${SCRIPT_URL}?${params}`, { method: 'GET', mode: 'no-cors' });
-      showSuccess({ name, company, phone, date: ts.dateKr, time: ts.time });
-    } catch(e) {
-      showSuccess({ name, company, phone, date: ts.dateKr, time: ts.time });
-    } finally {
-      submitBtn.classList.remove('loading-state');
-      submitBtn.disabled = false;
-    }
-  }
-
-  function showSuccess(data) {
-    const info = document.getElementById('successInfo');
-    const rows = [
-      ['구분', '🟠 퇴근'],
-      ['이름', data.name],
-      ['소속', data.company],
-      ['연락처', data.phone || '-'],
-      ['날짜', data.date],
-      ['시간', data.time],
-    ];
-    info.innerHTML = rows.map(([k,v]) => `
-      <div class="row"><span class="key">${k}</span><span class="val">${v}</span></div>
-    `).join('');
-    document.getElementById('successScreen').classList.add('show');
-  }
-
-  function resetForm() {
-    document.getElementById('name').value = '';
-    document.getElementById('company').value = '';
-    document.getElementById('phone').value = '';
-    document.getElementById('successScreen').classList.remove('show');
-    document.getElementById('errorMsg').classList.remove('show');
-  }
+function toast(m,t){const e=document.getElementById('toast');e.textContent=m;e.className=`toast ${t} show`;setTimeout(()=>e.classList.remove('show'),4000)}
+function restore(){try{const m=document.cookie.match(/ac=([^;]+)/);if(m){const d=JSON.parse(decodeURIComponent(m[1]));if(d.name)document.getElementById('f-name').value=d.name;if(d.phone)document.getElementById('f-phone').value=d.phone}}catch(e){}}
 </script>
 </body>
 </html>
