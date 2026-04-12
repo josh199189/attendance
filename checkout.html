@@ -18,12 +18,16 @@ body{background:radial-gradient(ellipse at 50% -15%,rgba(91,156,246,.09) 0%,tran
 .clock-wrap{text-align:center;margin:20px 0 28px}
 .clock{font-family:var(--mono);font-size:48px;font-weight:600;color:#fff;letter-spacing:3px;line-height:1}
 .clock-date{font-size:13px;color:var(--text-dim);margin-top:6px}
-.gps{display:flex;align-items:center;gap:9px;padding:12px 16px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:20px;font-size:12px;color:var(--text-dim)}
+.gps{display:flex;align-items:center;gap:9px;padding:12px 16px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;font-size:12px;color:var(--text-dim)}
 .gps-dot{width:8px;height:8px;border-radius:50%;background:var(--text-muted);flex-shrink:0}
 .gps-dot.ok{background:#00d68f;box-shadow:0 0 10px rgba(0,214,143,.3);animation:pulse 2s infinite}
 .gps-dot.loading{background:#f5a623;animation:pulse 1s infinite}
 .gps-dot.err{background:#ff5252}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.gps-dist{padding:8px 16px;border-radius:var(--radius-sm);margin-bottom:20px;font-size:12px;font-weight:600;text-align:center}
+.gps-dist.near{background:rgba(0,214,143,.1);border:1px solid rgba(0,214,143,.3);color:#00d68f}
+.gps-dist.far{background:rgba(255,82,82,.1);border:1px solid rgba(255,82,82,.3);color:#ff5252}
+.gps-dist.unknown{background:var(--surface-2);border:1px solid var(--border);color:var(--text-muted)}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;box-shadow:0 4px 32px rgba(0,0,0,.4)}
 .field{margin-bottom:16px}
 .field label{display:block;font-size:12px;font-weight:600;color:var(--text-dim);margin-bottom:6px}
@@ -47,6 +51,7 @@ body{background:radial-gradient(ellipse at 50% -15%,rgba(91,156,246,.09) 0%,tran
   <div class="clock-wrap"><div class="clock" id="clock">--:--:--</div><div class="clock-date" id="clock-date">-</div></div>
   <div class="card">
     <div class="gps"><div class="gps-dot loading" id="gps-dot"></div><span id="gps-txt">GPS 위치 확인 중...</span></div>
+    <div class="gps-dist unknown" id="gps-dist">현장 거리 계산 중...</div>
     <div class="field"><label>이름 *</label><input type="text" id="f-name" placeholder="홍길동" autocomplete="name"></div>
     <div class="field"><label>전화번호 *</label><input type="tel" id="f-phone" placeholder="010-1234-5678" autocomplete="tel"></div>
     <button class="btn" id="btn" onclick="doSubmit()">👋 퇴근 등록</button>
@@ -55,25 +60,41 @@ body{background:radial-gradient(ellipse at 50% -15%,rgba(91,156,246,.09) 0%,tran
 <div class="toast" id="toast"></div>
 <script>
 var SCRIPT_URL='https://script.google.com/macros/s/AKfycbzj3Um2bnS0uDNQSaFMSX3xY_cvYPhQ-rNqnx3EvQGQXCOqRVugbnS6lcTqlDE93qj4IA/exec';
-var lat=null,lng=null,gpsReady=false;
 
-document.addEventListener('DOMContentLoaded',function(){
-  tick();setInterval(tick,1000);
-  startGPS();
-  restore();
-});
+var BASE_LAT=37.3393;
+var BASE_LNG=126.8015;
+var MAX_DISTANCE=100;
+
+var lat=null,lng=null,gpsReady=false,withinRange=false;
+
+document.addEventListener('DOMContentLoaded',function(){tick();setInterval(tick,1000);startGPS();restore()});
 
 function tick(){var n=new Date();document.getElementById('clock').textContent=n.toLocaleTimeString('ko-KR',{hour12:false});document.getElementById('clock-date').textContent=n.toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'long'})}
+
+function getDistance(lat1,lng1,lat2,lng2){
+  var R=6371000;var dLat=(lat2-lat1)*Math.PI/180;var dLng=(lng2-lng1)*Math.PI/180;
+  var a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)*Math.sin(dLng/2);
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
 
 function startGPS(){
   if(!navigator.geolocation){setGPS('err','GPS를 지원하지 않는 기기입니다');return}
   setGPS('loading','GPS 위치 확인 중...');
   navigator.geolocation.watchPosition(
     function(pos){
-      lat=pos.coords.latitude;
-      lng=pos.coords.longitude;
-      gpsReady=true;
+      lat=pos.coords.latitude;lng=pos.coords.longitude;gpsReady=true;
       setGPS('ok','위치 확인됨 (±'+Math.round(pos.coords.accuracy)+'m)');
+      var dist=getDistance(lat,lng,BASE_LAT,BASE_LNG);
+      var distEl=document.getElementById('gps-dist');
+      if(dist<=MAX_DISTANCE){
+        withinRange=true;
+        distEl.className='gps-dist near';
+        distEl.textContent='✅ 현장 범위 내 ('+Math.round(dist)+'m)';
+      }else{
+        withinRange=false;
+        distEl.className='gps-dist far';
+        distEl.textContent='❌ 현장에서 '+Math.round(dist)+'m 떨어져 있습니다 (100m 이내만 등록 가능)';
+      }
     },
     function(err){
       if(err.code===1)setGPS('err','GPS 권한을 허용해주세요.');
@@ -100,8 +121,9 @@ function doSubmit(){
   var name=document.getElementById('f-name').value.trim();
   var phone=document.getElementById('f-phone').value.trim();
   if(!name||!phone)return toast('이름과 전화번호를 입력해주세요.','error');
-  if(!gpsReady){toast('GPS 위치를 확인 중입니다. 잠시 후 다시 시도해주세요.','error');return}
-  
+  if(!gpsReady)return toast('GPS 위치를 확인 중입니다. 잠시 후 다시 시도해주세요.','error');
+  if(!withinRange)return toast('현장 반경 100m 이내에서만 퇴근 등록이 가능합니다.','error');
+
   var btn=document.getElementById('btn');btn.disabled=true;btn.innerHTML='<span class="spinner"></span> 처리 중...';
   callAPI({action:'checkOut',name:name,phone:phone,lat:String(lat),lng:String(lng)},function(err,res){
     if(err)toast(err.message,'error');
