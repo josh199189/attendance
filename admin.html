@@ -14,7 +14,9 @@ body{background:radial-gradient(ellipse at 20% -5%,rgba(245,166,35,.06) 0%,trans
 .hdr{display:flex;align-items:center;justify-content:space-between;padding:20px 0 16px;flex-wrap:wrap;gap:12px}
 .hdr-left h1{font-size:22px;font-weight:900;color:#fff}
 .hdr-left .sub{font-size:12px;color:var(--text-dim);margin-top:2px}
+.hdr-right{display:flex;align-items:center;gap:8px}
 .hdr-time{font-family:var(--mono);font-size:13px;color:var(--amber);background:var(--amber-dim);border:1px solid rgba(245,166,35,.2);padding:6px 12px;border-radius:8px}
+.refresh-btn{padding:6px 12px;border:1px solid var(--border);background:var(--surface);color:var(--text-dim);font-size:16px;border-radius:8px;cursor:pointer}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px}
 .stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px 10px;text-align:center}
 .stat-val{font-family:var(--mono);font-size:26px;font-weight:700;line-height:1}
@@ -61,12 +63,19 @@ body{background:radial-gradient(ellipse at 20% -5%,rgba(245,166,35,.06) 0%,trans
 .spinner{display:inline-block;width:20px;height:20px;border:2.5px solid rgba(255,255,255,.15);border-top-color:var(--amber);border-radius:50%;animation:spin .6s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .lc{display:flex;justify-content:center;padding:40px}
+.last-update{text-align:center;font-size:11px;color:var(--text-muted);margin-bottom:16px}
 @media(max-width:480px){.stats{grid-template-columns:repeat(2,1fr)}.item-grid{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
 <div class="app">
-  <div class="hdr"><div class="hdr-left"><h1>⚙️ 관리자 확인</h1><div class="sub">출퇴근 더블체킹 관리 패널</div></div><div class="hdr-time" id="hdr-time">--:--</div></div>
+  <div class="hdr">
+    <div class="hdr-left"><h1>⚙️ 관리자 확인</h1><div class="sub">출퇴근 더블체킹 관리 패널</div></div>
+    <div class="hdr-right">
+      <button class="refresh-btn" onclick="loadList()">🔄</button>
+      <div class="hdr-time" id="hdr-time">--:--</div>
+    </div>
+  </div>
   <div class="stats">
     <div class="stat"><div class="stat-val" id="s-total" style="color:var(--blue)">-</div><div class="stat-lbl">총 등록</div></div>
     <div class="stat"><div class="stat-val" id="s-ok" style="color:var(--green)">-</div><div class="stat-lbl">확인완료</div></div>
@@ -78,6 +87,7 @@ body{background:radial-gradient(ellipse at 20% -5%,rgba(245,166,35,.06) 0%,trans
     <button class="tb tb-load" onclick="loadList()">📋 조회</button>
     <button class="tb tb-all" onclick="confirmAll()">✅ 전체확인</button>
   </div>
+  <div class="last-update" id="last-update"></div>
   <div class="filters">
     <button class="ft active" onclick="sf('all',this)">전체 <span class="c" id="fc-a">0</span></button>
     <button class="ft" onclick="sf('pending',this)">⏳ 대기 <span class="c" id="fc-p">0</span></button>
@@ -88,9 +98,18 @@ body{background:radial-gradient(ellipse at 20% -5%,rgba(245,166,35,.06) 0%,trans
 </div>
 <script>
 var SCRIPT_URL='https://script.google.com/macros/s/AKfycbxCKCsO7WCXgPLEZilVrnRy56ujnrje_L6u9MECN1Sm_9ESU-JcM-Tzl0S7bcS83LiTrg/exec';
-var items=[],filter='all';
-document.addEventListener('DOMContentLoaded',function(){document.getElementById('pick-date').value=new Date().toISOString().split('T')[0];tc();setInterval(tc,1000);loadList()});
+var items=[],filter='all',autoRefreshTimer=null;
+
+document.addEventListener('DOMContentLoaded',function(){
+  document.getElementById('pick-date').value=new Date().toISOString().split('T')[0];
+  tc();setInterval(tc,1000);
+  loadList();
+  // 30초마다 자동 새로고침
+  autoRefreshTimer=setInterval(loadList,30000);
+});
+
 function tc(){document.getElementById('hdr-time').textContent=new Date().toLocaleTimeString('ko-KR',{hour12:false})}
+
 function callAPI(params,cb){
   var cn='cb_'+Date.now()+'_'+Math.floor(Math.random()*10000);
   window[cn]=function(r){delete window[cn];var el=document.getElementById(cn);if(el)el.remove();cb(null,r)};
@@ -101,6 +120,7 @@ function callAPI(params,cb){
   document.body.appendChild(s);
   setTimeout(function(){if(window[cn]){delete window[cn];var el=document.getElementById(cn);if(el)el.remove();cb(new Error('요청 시간 초과'))}},30000);
 }
+
 function loadList(){
   var date=document.getElementById('pick-date').value;var el=document.getElementById('list');
   el.innerHTML='<div class="lc"><span class="spinner"></span></div>';
@@ -108,8 +128,10 @@ function loadList(){
     if(err){el.innerHTML='<div class="empty"><p>로드 실패: '+err.message+'</p></div>';return}
     if(!res.success||!res.list||res.list.length===0){items=[];upStats();upFC();el.innerHTML='<div class="empty"><div class="icon">📭</div><p>'+date+' 등록자 없음</p></div>';return}
     items=res.list;upStats();upFC();render();
+    document.getElementById('last-update').textContent='마지막 갱신: '+new Date().toLocaleTimeString('ko-KR',{hour12:false});
   });
 }
+
 function render(){
   var el=document.getElementById('list');
   var f=filter==='all'?items:items.filter(function(i){return gs(i)===filter});
@@ -123,18 +145,19 @@ function render(){
     else if(i.adminCheckOut&&i.adminCheckOut!=='미퇴근')cob='<button class="ab done-y">✅ 확인됨 '+esc(i.adminCheckOut)+'</button>';
     else if(i.adminCheckOut==='미퇴근')cob='<button class="ab done-n">❌ 미퇴근</button>';
     else cob='<button class="ab confirm" onclick="dc('+i.row+',\'checkOut\',true)">✅ 퇴근 확인</button><button class="ab deny" onclick="dc('+i.row+',\'checkOut\',false)">❌ 미퇴근</button>';
-    var gi=i.checkInLat?'<a href="https://maps.google.com/?q='+i.checkInLat+','+i.checkInLng+'" target="_blank">📍지도</a>':'';
+    var gi=i.checkInLat?'<a href="https://maps.google.com/?q='+i.checkInLat+','+i.checkInLng+'" target="_blank">📍지도</a>':'<span style="color:var(--text-muted)">GPS없음</span>';
     var go=i.checkOutLat?'<a href="https://maps.google.com/?q='+i.checkOutLat+','+i.checkOutLng+'" target="_blank">📍지도</a>':'';
     var bd=st==='confirmed'?'<span class="badge badge-ok">✅ 확인</span>':st==='denied'?'<span class="badge badge-no">❌ 미출근</span>':'<span class="badge badge-p">⏳ 대기</span>';
     return '<div class="item"><div class="item-top"><span class="item-name">'+esc(i.name)+' '+bd+'</span><span class="item-co">'+esc(i.company)+'</span></div><div class="item-grid"><div class="item-cell">자가 출근<br><strong>'+(i.checkInTime||'-')+'</strong>'+gi+'</div><div class="item-cell">자가 퇴근<br><strong>'+(i.checkOutTime||'-')+'</strong>'+go+'</div><div class="item-cell">전화번호<br><strong>'+esc(i.phone)+'</strong></div></div><div class="sec"><div class="sec-t">▸ 출근 확인</div><div class="ar">'+cib+'</div></div><div class="sec"><div class="sec-t">▸ 퇴근 확인</div><div class="ar">'+cob+'</div></div></div>';
   }).join('');
 }
-function dc(row,type,confirmed){callAPI({action:'adminConfirm',row:row,type:type,confirmed:confirmed},function(err,res){if(err)alert('처리 실패');else if(res.success)loadList();else alert(res.message)})}
+
+function dc(row,type,confirmed){callAPI({action:'adminConfirm',row:String(row),type:type,confirmed:String(confirmed)},function(err,res){if(err)alert('처리 실패');else if(res.success)loadList();else alert(res.message)})}
 function confirmAll(){
   var pending=items.filter(function(i){return !i.adminCheckIn||i.adminCheckIn===''});
   if(!pending.length)return alert('대기중인 인원이 없습니다.');
   if(!confirm('대기중 '+pending.length+'명 전체 출근 확인?'))return;
-  var idx=0;function next(){if(idx>=pending.length){loadList();return}callAPI({action:'adminConfirm',row:pending[idx].row,type:'checkIn',confirmed:true},function(){idx++;next()});}next();
+  var idx=0;function next(){if(idx>=pending.length){loadList();return}callAPI({action:'adminConfirm',row:String(pending[idx].row),type:'checkIn',confirmed:'true'},function(){idx++;next()});}next();
 }
 function gs(i){if(i.adminCheckIn==='미출근')return'denied';if(i.adminCheckIn&&i.adminCheckIn!=='')return'confirmed';return'pending'}
 function sf(f,el){filter=f;document.querySelectorAll('.ft').forEach(function(t){t.classList.remove('active')});el.classList.add('active');render()}
