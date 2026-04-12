@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>출근 등록</title>
+<title>출근 등록 - BS Bio</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -11,12 +11,14 @@
 html,body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100dvh;-webkit-font-smoothing:antialiased}
 body{background:radial-gradient(ellipse at 50% -20%,rgba(0,230,118,.08) 0%,transparent 60%),var(--bg)}
 .app{max-width:420px;margin:0 auto;padding:24px 16px 48px}
-.hdr{text-align:center;padding:24px 0 12px}
-.hdr-icon{width:72px;height:72px;margin:0 auto 16px;background:linear-gradient(135deg,var(--green),var(--green-dark));border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:34px;box-shadow:0 8px 40px var(--green-glow)}
-.hdr h1{font-size:28px;font-weight:900;letter-spacing:-1px;color:#fff}
+.logo-wrap{text-align:center;padding:20px 0 8px}
+.logo-wrap img{height:36px;opacity:.9}
+.hdr{text-align:center;padding:8px 0 12px}
+.hdr-icon{width:64px;height:64px;margin:0 auto 12px;background:linear-gradient(135deg,var(--green),var(--green-dark));border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:30px;box-shadow:0 8px 40px var(--green-glow)}
+.hdr h1{font-size:26px;font-weight:900;letter-spacing:-1px;color:#fff}
 .hdr .sub{font-size:13px;color:var(--text-dim);margin-top:4px}
-.clock-wrap{text-align:center;margin:20px 0 28px}
-.clock{font-family:var(--mono);font-size:48px;font-weight:600;color:#fff;letter-spacing:3px;line-height:1}
+.clock-wrap{text-align:center;margin:16px 0 24px}
+.clock{font-family:var(--mono);font-size:44px;font-weight:600;color:#fff;letter-spacing:3px;line-height:1}
 .clock-date{font-size:13px;color:var(--text-dim);margin-top:6px}
 .gps{display:flex;align-items:center;gap:9px;padding:12px 16px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;font-size:12px;color:var(--text-dim)}
 .gps-dot{width:8px;height:8px;border-radius:50%;background:var(--text-muted);flex-shrink:0}
@@ -48,6 +50,7 @@ body{background:radial-gradient(ellipse at 50% -20%,rgba(0,230,118,.08) 0%,trans
 </head>
 <body>
 <div class="app">
+  <div class="logo-wrap"><img src="logo.png" alt="BS Bio"></div>
   <div class="hdr"><div class="hdr-icon">🟢</div><h1>출근 등록</h1><div class="sub">정보를 입력하고 출근 버튼을 눌러주세요</div></div>
   <div class="clock-wrap"><div class="clock" id="clock">--:--:--</div><div class="clock-date" id="clock-date">-</div></div>
   <div class="card">
@@ -69,56 +72,27 @@ body{background:radial-gradient(ellipse at 50% -20%,rgba(0,230,118,.08) 0%,trans
 <div class="toast" id="toast"></div>
 <script>
 var SCRIPT_URL='https://script.google.com/macros/s/AKfycbxhbg6Y5Ij7yqvooNPbmSvJEjb9OPtr9HDabV_zOv8l1O2O8KHum8qnjd3v-dSJO8uQ6A/exec';
-
-// 기준 위치: 안산시 단원구 원시동 727-3
-var BASE_LAT = 37.3393;
-var BASE_LNG = 126.8015;
-var MAX_DISTANCE = 100; // 미터
-
+var BASE_LAT=37.3393,BASE_LNG=126.8015,MAX_DISTANCE=100;
 var lat=null,lng=null,gpsReady=false,withinRange=false;
-
 document.addEventListener('DOMContentLoaded',function(){tick();setInterval(tick,1000);startGPS();restore()});
-
 function tick(){var n=new Date();document.getElementById('clock').textContent=n.toLocaleTimeString('ko-KR',{hour12:false});document.getElementById('clock-date').textContent=n.toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'long'})}
-
-// 두 좌표 사이 거리 계산 (미터)
-function getDistance(lat1,lng1,lat2,lng2){
-  var R=6371000;
-  var dLat=(lat2-lat1)*Math.PI/180;
-  var dLng=(lng2-lng1)*Math.PI/180;
-  var a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)*Math.sin(dLng/2);
-  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
-}
-
+function getDistance(lat1,lng1,lat2,lng2){var R=6371000;var dLat=(lat2-lat1)*Math.PI/180;var dLng=(lng2-lng1)*Math.PI/180;var a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)*Math.sin(dLng/2);return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))}
 function startGPS(){
   if(!navigator.geolocation){setGPS('err','GPS를 지원하지 않는 기기입니다');return}
   setGPS('loading','GPS 위치 확인 중...');
-  navigator.geolocation.watchPosition(
-    function(pos){
-      lat=pos.coords.latitude;lng=pos.coords.longitude;gpsReady=true;
-      setGPS('ok','위치 확인됨 (±'+Math.round(pos.coords.accuracy)+'m)');
-      var dist=getDistance(lat,lng,BASE_LAT,BASE_LNG);
-      var distEl=document.getElementById('gps-dist');
-      if(dist<=MAX_DISTANCE){
-        withinRange=true;
-        distEl.className='gps-dist near';
-        distEl.textContent='✅ 현장 범위 내 ('+Math.round(dist)+'m)';
-      }else{
-        withinRange=false;
-        distEl.className='gps-dist far';
-        distEl.textContent='❌ 현장에서 '+Math.round(dist)+'m 떨어져 있습니다 (100m 이내만 등록 가능)';
-      }
-    },
-    function(err){
-      if(err.code===1)setGPS('err','GPS 권한을 허용해주세요.');
-      else if(err.code===2)setGPS('err','GPS 신호를 찾을 수 없습니다.');
-      else{setGPS('err','GPS 확인 시간 초과. 재시도 중...');setTimeout(startGPS,3000)}
-    },
-    {enableHighAccuracy:true,timeout:20000,maximumAge:0}
-  );
+  navigator.geolocation.watchPosition(function(pos){
+    lat=pos.coords.latitude;lng=pos.coords.longitude;gpsReady=true;
+    setGPS('ok','위치 확인됨 (±'+Math.round(pos.coords.accuracy)+'m)');
+    var dist=getDistance(lat,lng,BASE_LAT,BASE_LNG);var distEl=document.getElementById('gps-dist');
+    if(dist<=MAX_DISTANCE){withinRange=true;distEl.className='gps-dist near';distEl.textContent='✅ 현장 범위 내 ('+Math.round(dist)+'m)'}
+    else{withinRange=false;distEl.className='gps-dist far';distEl.textContent='❌ 현장에서 '+Math.round(dist)+'m 떨어져 있습니다 (100m 이내만 등록 가능)'}
+  },function(err){
+    if(err.code===1)setGPS('err','GPS 권한을 허용해주세요.');
+    else if(err.code===2)setGPS('err','GPS 신호를 찾을 수 없습니다.');
+    else{setGPS('err','GPS 확인 시간 초과. 재시도 중...');setTimeout(startGPS,3000)}
+  },{enableHighAccuracy:true,timeout:20000,maximumAge:0});
 }
 function setGPS(s,t){document.getElementById('gps-dot').className='gps-dot '+s;document.getElementById('gps-txt').textContent=t}
-
 function callAPI(params,cb){
   var cn='cb_'+Date.now()+'_'+Math.floor(Math.random()*10000);
   window[cn]=function(r){delete window[cn];var el=document.getElementById(cn);if(el)el.remove();cb(null,r)};
@@ -129,25 +103,18 @@ function callAPI(params,cb){
   document.body.appendChild(s);
   setTimeout(function(){if(window[cn]){delete window[cn];var el=document.getElementById(cn);if(el)el.remove();cb(new Error('요청 시간 초과'))}},30000);
 }
-
 function doSubmit(){
-  var name=document.getElementById('f-name').value.trim();
-  var phone=document.getElementById('f-phone').value.trim();
-  var company=document.getElementById('f-company').value;
+  var name=document.getElementById('f-name').value.trim(),phone=document.getElementById('f-phone').value.trim(),company=document.getElementById('f-company').value;
   if(!name||!phone)return toast('이름과 전화번호를 입력해주세요.','error');
   if(!company)return toast('업체를 선택해주세요.','error');
   if(!gpsReady)return toast('GPS 위치를 확인 중입니다. 잠시 후 다시 시도해주세요.','error');
   if(!withinRange)return toast('현장 반경 100m 이내에서만 출근 등록이 가능합니다.','error');
-
   var btn=document.getElementById('btn');btn.disabled=true;btn.innerHTML='<span class="spinner"></span> 처리 중...';
   callAPI({action:'checkIn',name:name,phone:phone,company:company,lat:String(lat),lng:String(lng)},function(err,res){
-    if(err)toast(err.message,'error');
-    else if(res.success){toast(res.message,'success');save(name,phone,company)}
-    else toast(res.message,'error');
+    if(err)toast(err.message,'error');else if(res.success){toast(res.message,'success');save(name,phone,company)}else toast(res.message,'error');
     btn.disabled=false;btn.innerHTML='🟢 출근 등록';
   });
 }
-
 function toast(m,t){var e=document.getElementById('toast');e.textContent=m;e.className='toast '+t+' show';setTimeout(function(){e.classList.remove('show')},4000)}
 function save(n,p,c){try{document.cookie='ac='+encodeURIComponent(JSON.stringify({name:n,phone:p,company:c}))+';max-age=2592000;path=/'}catch(e){}}
 function restore(){try{var m=document.cookie.match(/ac=([^;]+)/);if(m){var d=JSON.parse(decodeURIComponent(m[1]));if(d.name)document.getElementById('f-name').value=d.name;if(d.phone)document.getElementById('f-phone').value=d.phone;if(d.company){var sel=document.getElementById('f-company');for(var i=0;i<sel.options.length;i++){if(sel.options[i].value===d.company){sel.selectedIndex=i;break}}}}}catch(e){}}
