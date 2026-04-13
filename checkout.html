@@ -63,7 +63,7 @@ body{background:radial-gradient(ellipse at 50% -15%,rgba(91,156,246,.09) 0%,tran
 <div class="toast" id="toast"></div>
 <script>
 var SCRIPT_URL='https://script.google.com/macros/s/AKfycbxhbg6Y5Ij7yqvooNPbmSvJEjb9OPtr9HDabV_zOv8l1O2O8KHum8qnjd3v-dSJO8uQ6A/exec';
-var BASE_LAT=37.3393,BASE_LNG=126.8015,MAX_DISTANCE=100;
+var BASE_LAT=37.3153635,BASE_LNG=126.7874938,MAX_DISTANCE=100;
 var lat=null,lng=null,gpsReady=false,withinRange=false;
 document.addEventListener('DOMContentLoaded',function(){tick();setInterval(tick,1000);startGPS();restore()});
 function tick(){var n=new Date();document.getElementById('clock').textContent=n.toLocaleTimeString('ko-KR',{hour12:false});document.getElementById('clock-date').textContent=n.toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'long'})}
