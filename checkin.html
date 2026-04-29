@@ -37,6 +37,7 @@ body{background:radial-gradient(ellipse at 50% -20%,rgba(0,230,118,.08) 0%,trans
 .field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237da987' stroke-width='2' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;padding-right:40px}
 .field input:focus,.field select:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px var(--green-glow)}
 .field input::placeholder{color:var(--text-muted)}
+.field select option{background:var(--surface-2);color:var(--text)}
 .btn{width:100%;padding:18px;border:none;border-radius:var(--radius-sm);font-family:var(--font);font-size:17px;font-weight:800;cursor:pointer;transition:all .2s;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,var(--green),var(--green-dark));color:#000;box-shadow:0 6px 28px var(--green-glow)}
 .btn:active{transform:scale(.97)}
 .btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
@@ -51,32 +52,55 @@ body{background:radial-gradient(ellipse at 50% -20%,rgba(0,230,118,.08) 0%,trans
 <body>
 <div class="app">
   <div class="logo-wrap"><img src="logo.png" alt="BS Bio"></div>
-  <div class="hdr"><div class="hdr-icon">🟢</div><h1>출근 등록</h1><div class="sub">정보를 입력하고 출근 버튼을 눌러주세요</div></div>
-  <div class="clock-wrap"><div class="clock" id="clock">--:--:--</div><div class="clock-date" id="clock-date">-</div></div>
+  <div class="hdr">
+    <div class="hdr-icon">🟢</div>
+    <h1>출근 등록</h1>
+    <div class="sub">정보를 입력하고 출근 버튼을 눌러주세요</div>
+  </div>
+  <div class="clock-wrap">
+    <div class="clock" id="clock">--:--:--</div>
+    <div class="clock-date" id="clock-date">-</div>
+  </div>
   <div class="card">
     <div class="gps"><div class="gps-dot loading" id="gps-dot"></div><span id="gps-txt">GPS 위치 확인 중...</span></div>
     <div class="gps-dist unknown" id="gps-dist">현장 거리 계산 중...</div>
+
     <div class="field"><label>이름 *</label><input type="text" id="f-name" placeholder="홍길동" autocomplete="name"></div>
     <div class="field"><label>전화번호 *</label><input type="tel" id="f-phone" placeholder="010-1234-5678" autocomplete="tel"></div>
-    <div class="field"><label>업체명 *</label>
+    <div class="field">
+      <label>업체명 *</label>
       <select id="f-company">
         <option value="">-- 업체 선택 --</option>
-        <option value="다온컴퍼니">다온컴퍼니</option>
-        <option value="엔피와이씨">엔피와이씨</option>
         <option value="k시스템">k시스템</option>
+        <option value="엔피와이씨">엔피와이씨</option>
+        <option value="에이스테크">에이스테크</option>
       </select>
     </div>
+    <div class="field">
+      <label>근무 층 *</label>
+      <select id="f-floor">
+        <option value="">-- 층 선택 --</option>
+        <option value="2층">2층 (고형제)</option>
+        <option value="3층">3층 (액상)</option>
+      </select>
+    </div>
+
     <button class="btn" id="btn" onclick="doSubmit()">🟢 출근 등록</button>
   </div>
 </div>
 <div class="toast" id="toast"></div>
+
 <script>
 var SCRIPT_URL='https://script.google.com/macros/s/AKfycbxhbg6Y5Ij7yqvooNPbmSvJEjb9OPtr9HDabV_zOv8l1O2O8KHum8qnjd3v-dSJO8uQ6A/exec';
 var BASE_LAT=37.3153635,BASE_LNG=126.7874938,MAX_DISTANCE=100;
 var lat=null,lng=null,gpsReady=false,withinRange=false;
+
 document.addEventListener('DOMContentLoaded',function(){tick();setInterval(tick,1000);startGPS();restore()});
+
 function tick(){var n=new Date();document.getElementById('clock').textContent=n.toLocaleTimeString('ko-KR',{hour12:false});document.getElementById('clock-date').textContent=n.toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'long'})}
+
 function getDistance(lat1,lng1,lat2,lng2){var R=6371000;var dLat=(lat2-lat1)*Math.PI/180;var dLng=(lng2-lng1)*Math.PI/180;var a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)*Math.sin(dLng/2);return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))}
+
 function startGPS(){
   if(!navigator.geolocation){setGPS('err','GPS를 지원하지 않는 기기입니다');return}
   setGPS('loading','GPS 위치 확인 중...');
@@ -92,7 +116,9 @@ function startGPS(){
     else{setGPS('err','GPS 확인 시간 초과. 재시도 중...');setTimeout(startGPS,3000)}
   },{enableHighAccuracy:true,timeout:20000,maximumAge:0});
 }
+
 function setGPS(s,t){document.getElementById('gps-dot').className='gps-dot '+s;document.getElementById('gps-txt').textContent=t}
+
 function callAPI(params,cb){
   var cn='cb_'+Date.now()+'_'+Math.floor(Math.random()*10000);
   window[cn]=function(r){delete window[cn];var el=document.getElementById(cn);if(el)el.remove();cb(null,r)};
@@ -103,21 +129,33 @@ function callAPI(params,cb){
   document.body.appendChild(s);
   setTimeout(function(){if(window[cn]){delete window[cn];var el=document.getElementById(cn);if(el)el.remove();cb(new Error('요청 시간 초과'))}},30000);
 }
+
 function doSubmit(){
-  var name=document.getElementById('f-name').value.trim(),phone=document.getElementById('f-phone').value.trim(),company=document.getElementById('f-company').value;
+  var name=document.getElementById('f-name').value.trim();
+  var phone=document.getElementById('f-phone').value.trim();
+  var company=document.getElementById('f-company').value;
+  var floor=document.getElementById('f-floor').value;
+
   if(!name||!phone)return toast('이름과 전화번호를 입력해주세요.','error');
   if(!company)return toast('업체를 선택해주세요.','error');
+  if(!floor)return toast('근무 층을 선택해주세요.','error');
   if(!gpsReady)return toast('GPS 위치를 확인 중입니다. 잠시 후 다시 시도해주세요.','error');
   if(!withinRange)return toast('현장 반경 100m 이내에서만 출근 등록이 가능합니다.','error');
+
   var btn=document.getElementById('btn');btn.disabled=true;btn.innerHTML='<span class="spinner"></span> 처리 중...';
-  callAPI({action:'checkIn',name:name,phone:phone,company:company,lat:String(lat),lng:String(lng)},function(err,res){
-    if(err)toast(err.message,'error');else if(res.success){toast(res.message,'success');save(name,phone,company)}else toast(res.message,'error');
+  callAPI({action:'checkIn',name:name,phone:phone,company:company,floor:floor,lat:String(lat),lng:String(lng)},function(err,res){
+    if(err)toast(err.message,'error');
+    else if(res.success){toast(res.message,'success');save(name,phone,company,floor)}
+    else toast(res.message,'error');
     btn.disabled=false;btn.innerHTML='🟢 출근 등록';
   });
 }
+
 function toast(m,t){var e=document.getElementById('toast');e.textContent=m;e.className='toast '+t+' show';setTimeout(function(){e.classList.remove('show')},4000)}
-function save(n,p,c){try{document.cookie='ac='+encodeURIComponent(JSON.stringify({name:n,phone:p,company:c}))+';max-age=2592000;path=/'}catch(e){}}
-function restore(){try{var m=document.cookie.match(/ac=([^;]+)/);if(m){var d=JSON.parse(decodeURIComponent(m[1]));if(d.name)document.getElementById('f-name').value=d.name;if(d.phone)document.getElementById('f-phone').value=d.phone;if(d.company){var sel=document.getElementById('f-company');for(var i=0;i<sel.options.length;i++){if(sel.options[i].value===d.company){sel.selectedIndex=i;break}}}}}catch(e){}}
+
+function save(n,p,c,f){try{document.cookie='ac='+encodeURIComponent(JSON.stringify({name:n,phone:p,company:c,floor:f}))+';max-age=2592000;path=/'}catch(e){}}
+
+function restore(){try{var m=document.cookie.match(/ac=([^;]+)/);if(m){var d=JSON.parse(decodeURIComponent(m[1]));if(d.name)document.getElementById('f-name').value=d.name;if(d.phone)document.getElementById('f-phone').value=d.phone;if(d.company){var sel=document.getElementById('f-company');for(var i=0;i<sel.options.length;i++){if(sel.options[i].value===d.company){sel.selectedIndex=i;break}}}if(d.floor){var fsel=document.getElementById('f-floor');for(var j=0;j<fsel.options.length;j++){if(fsel.options[j].value===d.floor){fsel.selectedIndex=j;break}}}}}catch(e){}}
 </script>
 </body>
 </html>
