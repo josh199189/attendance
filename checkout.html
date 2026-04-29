@@ -3,18 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>퇴근 등록 - BS Bio</title>
+<title>헔근 등록 - BS Bio</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{--bg:#070b14;--surface:#0d1525;--surface-2:#131e33;--border:#1c2d4e;--border-focus:#4a8aeb;--text:#dfe6f2;--text-dim:#7a8baa;--text-muted:#4a5a78;--blue:#5b9cf6;--blue-dark:#3d7de8;--blue-glow:rgba(91,156,246,.22);--font:'Noto Sans KR',-apple-system,sans-serif;--mono:'IBM Plex Mono',monospace;--radius:16px;--radius-sm:11px}
+:root{--bg:#0f0a00;--surface:#1f1500;--surface-2:#2a1e00;--border:#3d2e00;--border-focus:#cc7a00;--text:#f0e6cc;--text-dim:#a88a4a;--text-muted:#6b5a2e;--orange:#ff9800;--orange-dark:#f57c00;--orange-glow:rgba(255,152,0,.25);--font:'Noto Sans KR',-apple-system,sans-serif;--mono:'IBM Plex Mono',monospace;--radius:16px;--radius-sm:11px}
 html,body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:100dvh;-webkit-font-smoothing:antialiased}
-body{background:radial-gradient(ellipse at 50% -15%,rgba(91,156,246,.09) 0%,transparent 60%),var(--bg)}
+body{background:radial-gradient(ellipse at 50% -20%,rgba(255,152,0,.08) 0%,transparent 60%),var(--bg)}
 .app{max-width:420px;margin:0 auto;padding:24px 16px 48px}
 .logo-wrap{text-align:center;padding:20px 0 8px}
 .logo-wrap img{height:36px;opacity:.9}
 .hdr{text-align:center;padding:8px 0 12px}
-.hdr-icon{width:64px;height:64px;margin:0 auto 12px;background:linear-gradient(135deg,var(--blue),var(--blue-dark));border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:30px;box-shadow:0 8px 40px var(--blue-glow)}
+.hdr-icon{width:64px;height:64px;margin:0 auto 12px;background:linear-gradient(135deg,var(--orange),var(--orange-dark));border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:30px;box-shadow:0 8px 40px var(--orange-glow)}
 .hdr h1{font-size:26px;font-weight:900;letter-spacing:-1px;color:#fff}
 .hdr .sub{font-size:13px;color:var(--text-dim);margin-top:4px}
 .clock-wrap{text-align:center;margin:16px 0 24px}
@@ -22,52 +22,85 @@ body{background:radial-gradient(ellipse at 50% -15%,rgba(91,156,246,.09) 0%,tran
 .clock-date{font-size:13px;color:var(--text-dim);margin-top:6px}
 .gps{display:flex;align-items:center;gap:9px;padding:12px 16px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;font-size:12px;color:var(--text-dim)}
 .gps-dot{width:8px;height:8px;border-radius:50%;background:var(--text-muted);flex-shrink:0}
-.gps-dot.ok{background:#00d68f;box-shadow:0 0 10px rgba(0,214,143,.3);animation:pulse 2s infinite}
+.gps-dot.ok{background:var(--orange);box-shadow:0 0 10px var(--orange-glow);animation:pulse 2s infinite}
 .gps-dot.loading{background:#f5a623;animation:pulse 1s infinite}
 .gps-dot.err{background:#ff5252}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 .gps-dist{padding:8px 16px;border-radius:var(--radius-sm);margin-bottom:20px;font-size:12px;font-weight:600;text-align:center}
-.gps-dist.near{background:rgba(0,214,143,.1);border:1px solid rgba(0,214,143,.3);color:#00d68f}
+.gps-dist.near{background:rgba(255,152,0,.1);border:1px solid rgba(255,152,0,.3);color:var(--orange)}
 .gps-dist.far{background:rgba(255,82,82,.1);border:1px solid rgba(255,82,82,.3);color:#ff5252}
 .gps-dist.unknown{background:var(--surface-2);border:1px solid var(--border);color:var(--text-muted)}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:24px;box-shadow:0 4px 32px rgba(0,0,0,.4)}
 .field{margin-bottom:16px}
 .field label{display:block;font-size:12px;font-weight:600;color:var(--text-dim);margin-bottom:6px}
-.field input{width:100%;padding:14px 16px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:var(--font);font-size:16px;outline:none;transition:border-color .2s,box-shadow .2s}
-.field input:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px var(--blue-glow)}
+.field input,.field select{width:100%;padding:14px 16px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-family:var(--font);font-size:16px;outline:none;transition:border-color .2s,box-shadow .2s;-webkit-appearance:none;appearance:none}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23a88a4a' stroke-width='2' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 16px center;padding-right:40px}
+.field input:focus,.field select:focus{border-color:var(--border-focus);box-shadow:0 0 0 3px var(--orange-glow)}
 .field input::placeholder{color:var(--text-muted)}
-.btn{width:100%;padding:18px;border:none;border-radius:var(--radius-sm);font-family:var(--font);font-size:17px;font-weight:800;cursor:pointer;transition:all .2s;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,var(--blue),var(--blue-dark));color:#fff;box-shadow:0 6px 28px var(--blue-glow)}
+.field select option{background:var(--surface-2);color:var(--text)}
+.btn{width:100%;padding:18px;border:none;border-radius:var(--radius-sm);font-family:var(--font);font-size:17px;font-weight:800;cursor:pointer;transition:all .2s;margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(135deg,var(--orange),var(--orange-dark));color:#000;box-shadow:0 6px 28px var(--orange-glow)}
 .btn:active{transform:scale(.97)}
 .btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
 .toast{position:fixed;top:20px;left:50%;transform:translateX(-50%) translateY(-130px);max-width:380px;width:calc(100% - 32px);padding:16px 20px;border-radius:var(--radius-sm);font-size:14px;font-weight:600;z-index:999;transition:transform .35s cubic-bezier(.4,0,.2,1);box-shadow:0 8px 32px rgba(0,0,0,.5)}
 .toast.show{transform:translateX(-50%) translateY(0)}
-.toast.success{background:#0d2733;border:1px solid rgba(0,214,143,.35);color:#00d68f}
+.toast.success{background:#332200;border:1px solid rgba(255,152,0,.35);color:var(--orange)}
 .toast.error{background:#331015;border:1px solid rgba(255,82,82,.35);color:#ff5252}
-.spinner{display:inline-block;width:18px;height:18px;border:2.5px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite}
+.spinner{display:inline-block;width:18px;height:18px;border:2.5px solid rgba(0,0,0,.25);border-top-color:#000;border-radius:50%;animation:spin .6s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
 <div class="app">
   <div class="logo-wrap"><img src="logo.png" alt="BS Bio"></div>
-  <div class="hdr"><div class="hdr-icon">👋</div><h1>퇴근 등록</h1><div class="sub">수고하셨습니다! 퇴근 정보를 입력해주세요</div></div>
-  <div class="clock-wrap"><div class="clock" id="clock">--:--:--</div><div class="clock-date" id="clock-date">-</div></div>
+  <div class="hdr">
+    <div class="hdr-icon">💤</div>
+    <h1>헔근 등록</h1>
+    <div class="sub">적보 입렬하고 헔근 묀ث을 눌러주세요</div>
+  </div>
+  <div class="clock-wrap">
+    <div class="clock" id="clock">--:--:--</div>
+    <div class="clock-date" id="clock-date">-</div>
+  </div>
   <div class="card">
     <div class="gps"><div class="gps-dot loading" id="gps-dot"></div><span id="gps-txt">GPS 위치 확인 중...</span></div>
     <div class="gps-dist unknown" id="gps-dist">현장 거리 계산 중...</div>
+
     <div class="field"><label>이름 *</label><input type="text" id="f-name" placeholder="홍길동" autocomplete="name"></div>
     <div class="field"><label>전화번호 *</label><input type="tel" id="f-phone" placeholder="010-1234-5678" autocomplete="tel"></div>
-    <button class="btn" id="btn" onclick="doSubmit()">👋 퇴근 등록</button>
+    <div class="field">
+      <label>업체명 *</label>
+      <select id="f-company">
+        <option value="">-- 업체 선택 --</option>
+        <option value="k시스템">k시스템</option>
+        <option value="엔피와이씨">엔피와이씨</option>
+        <option value="에이스테크�">에이스테크</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>근무 층 *</label>
+      <select id="f-floor">
+        <option value="">-- 층 선택 --</option>
+        <option value="2층">2층 (고형(�)</option>
+        <option value="3층">3층 (액상)</option>
+      </select>
+    </div>
+
+    <button class="btn" id="btn" onclick="doSubmit()">💔 헔근 등록</button>
   </div>
 </div>
 <div class="toast" id="toast"></div>
+
 <script>
 var SCRIPT_URL='https://script.google.com/macros/s/AKfycbxhbg6Y5Ij7yqvooNPbmSvJEjb9OPtr9HDabV_zOv8l1O2O8KHum8qnjd3v-dSJO8uQ6A/exec';
 var BASE_LAT=37.3153635,BASE_LNG=126.7874938,MAX_DISTANCE=100;
 var lat=null,lng=null,gpsReady=false,withinRange=false;
+
 document.addEventListener('DOMContentLoaded',function(){tick();setInterval(tick,1000);startGPS();restore()});
+
 function tick(){var n=new Date();document.getElementById('clock').textContent=n.toLocaleTimeString('ko-KR',{hour12:false});document.getElementById('clock-date').textContent=n.toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'long'})}
+
 function getDistance(lat1,lng1,lat2,lng2){var R=6371000;var dLat=(lat2-lat1)*Math.PI/180;var dLng=(lng2-lng1)*Math.PI/180;var a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)*Math.sin(dLng/2);return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))}
+
 function startGPS(){
   if(!navigator.geolocation){setGPS('err','GPS를 지원하지 않는 기기입니다');return}
   setGPS('loading','GPS 위치 확인 중...');
@@ -83,7 +116,9 @@ function startGPS(){
     else{setGPS('err','GPS 확인 시간 초과. 재시도 중...');setTimeout(startGPS,3000)}
   },{enableHighAccuracy:true,timeout:20000,maximumAge:0});
 }
+
 function setGPS(s,t){document.getElementById('gps-dot').className='gps-dot '+s;document.getElementById('gps-txt').textContent=t}
+
 function callAPI(params,cb){
   var cn='cb_'+Date.now()+'_'+Math.floor(Math.random()*10000);
   window[cn]=function(r){delete window[cn];var el=document.getElementById(cn);if(el)el.remove();cb(null,r)};
@@ -94,19 +129,33 @@ function callAPI(params,cb){
   document.body.appendChild(s);
   setTimeout(function(){if(window[cn]){delete window[cn];var el=document.getElementById(cn);if(el)el.remove();cb(new Error('요청 시간 초과'))}},30000);
 }
+
 function doSubmit(){
-  var name=document.getElementById('f-name').value.trim(),phone=document.getElementById('f-phone').value.trim();
+  var name=document.getElementById('f-name').value.trim();
+  var phone=document.getElementById('f-phone').value.trim();
+  var company=document.getElementById('f-company').value;
+  var floor=document.getElementById('f-floor').value;
+
   if(!name||!phone)return toast('이름과 전화번호를 입력해주세요.','error');
+  if(!company)return toast('업체를 선택해주세요.','error');
+  if(!floor)return toast('근무 층을 선택해주세요.','error');
   if(!gpsReady)return toast('GPS 위치를 확인 중입니다. 잠시 후 다시 시도해주세요.','error');
-  if(!withinRange)return toast('현장 반경 100m 이내에서만 퇴근 등록이 가능합니다.','error');
+  if(!withinRange)return toast('현장 반경 100m 이내에서만 헔근 등록이 가능합니다.','error');
+
   var btn=document.getElementById('btn');btn.disabled=true;btn.innerHTML='<span class="spinner"></span> 처리 중...';
-  callAPI({action:'checkOut',name:name,phone:phone,lat:String(lat),lng:String(lng)},function(err,res){
-    if(err)toast(err.message,'error');else if(res.success)toast(res.message,'success');else toast(res.message,'error');
-    btn.disabled=false;btn.innerHTML='👋 퇴근 등록';
+  callAPI({action:'checkOut',name:name,phone:phone,company:company,floor:floor,lat:String(lat),lng:String(lng)},function(err,res){
+    if(err)toast(err.message,'error');
+    else if(res.success){toast(res.message,'success');save(name,phone,company,floor)}
+    else toast(res.message,'error');
+    btn.disabled=false;btn.innerHTML='💔 헔근 등록';
   });
 }
+
 function toast(m,t){var e=document.getElementById('toast');e.textContent=m;e.className='toast '+t+' show';setTimeout(function(){e.classList.remove('show')},4000)}
-function restore(){try{var m=document.cookie.match(/ac=([^;]+)/);if(m){var d=JSON.parse(decodeURIComponent(m[1]));if(d.name)document.getElementById('f-name').value=d.name;if(d.phone)document.getElementById('f-phone').value=d.phone}}catch(e){}}
+
+function save(n,p,c,f){try{document.cookie='ac='+encodeURIComponent(JSON.stringify({name:n,phone:p,company:c,floor:f}))+';max-age=2592000;path=/'}catch(e){}}
+
+function restore(){try{var m=document.cookie.match(/ac=([^;]+)/);if(m){var d=JSON.parse(decodeURIComponent(m[1]));if(d.name)document.getElementById('f-name').value=d.name;if(d.phone)document.getElementById('f-phone').value=d.phone;if(d.company){var sel=document.getElementById('f-company');for(var i=0;i<sel.options.length;i++){if(sel.options[i].value===d.company){sel.selectedIndex=i;break}}}if(d.floor){var fsel=document.getElementById('f-floor');for(var j=0;j<fsel.options.length;j++){if(fsel.options[j].value===d.floor){fsel.selectedIndex=j;break}}}}}catch(e){}}
 </script>
 </body>
 </html>
