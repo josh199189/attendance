@@ -1,7 +1,8 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>bsbio &#xEA;&#xB4;&#x20AC;&#xEB;&#xA6;&#xAC;&#xEC;&#x17E;&#x90; &#xED;&#x17D;&#x2DC;&#xEC;&#x9D;&#xB4;&#xEC;&#xA7;&#x20AC;</title>
 <style>
@@ -457,10 +458,7 @@
 
     // &#xEB;&#x8D;&#xB0;&#xEB;&#xAA;&#xA8; &#xEA;&#xB2;&#x20AC;&#xEC;&#xA6;&#x9D; (URL &#xEC;&#x2014;&#x2020;&#xEC;&#x9D;&#x201E; &#xEB;&#x2022;&#x152;)
     var validPw = { '2&#xEC;&#xB8;&#xB5;': 'floor2admin', '3&#xEC;&#xB8;&#xB5;': 'floor3admin' };
-    if (false) {
-      if (pw === 'admin1234' || pw === validPw[floor]) {
-        loginSuccess(floor, pw);
-      } else {
+     else {
         showAlert(alertEl,'error','&#xE2;&#x9D;&#x152; &#xEB;&#xB9;&#x201E;&#xEB;&#xB0;&#x20AC;&#xEB;&#xB2;&#x2C6;&#xED;&#x2DC;&#xB8;&#xEA;&#xB0;&#x20AC; &#xEC;&#x2DC;&#xAC;&#xEB;&#xB0;&#x201D;&#xEB;&#xA5;&#xB4;&#xEC;&#xA7;&#x20AC; &#xEC;&#x2022;&#x160;&#xEC;&#x160;&#xB5;&#xEB;&#x2039;&#x2C6;&#xEB;&#x2039;&#xA4;.');
       }
       return;
@@ -514,8 +512,7 @@
     var el = document.getElementById('workerList');
     el.innerHTML = '<div class="loading"><div class="spinner"></div>&#xEB;&#x8D;&#xB0;&#xEC;&#x9D;&#xB4;&#xED;&#x201E;&#xB0;&#xEB;&#xA5;&#xBC; &#xEB;&#xB6;&#x2C6;&#xEB;&#x178;&#xAC;&#xEC;&#x2DC;&#xA4;&#xEB;&#x160;&#x201D; &#xEC;&#xA4;&#x2018;...</div>';
 
-    if (false) {
-      setTimeout(function(){ allWorkers = demoData(); renderList(allWorkers); }, 700);
+    , 700);
       return;
     }
 
@@ -586,10 +583,7 @@
       toast('&#xE2;&#x9D;&#x152; &#xEC;&#x9D;&#xB4; &#xEC;&#x2014;&#x2026;&#xEC;&#xB2;&#xB4;&#xEB;&#x160;&#x201D; &#xED;&#x2122;&#x2022;&#xEC;&#x9D;&#xB8; &#xEA;&#xB6;&#x152;&#xED;&#x2022;&#x153;&#xEC;&#x9D;&#xB4; &#xEC;&#x2014;&#x2020;&#xEC;&#x160;&#xB5;&#xEB;&#x2039;&#x2C6;&#xEB;&#x2039;&#xA4;.');
       return;
     }
-    if (false) {
-      toast(confirmed ? '&#xE2;&#x153;&#x2026; &#xED;&#x2122;&#x2022;&#xEC;&#x9D;&#xB8; &#xEC;&#xB2;&#x2DC;&#xEB;&#xA6;&#xAC; (&#xEB;&#x8D;&#xB0;&#xEB;&#xAA;&#xA8;)' : '&#xE2;&#x9D;&#x152; &#xEB;&#xB6;&#x20AC;&#xEC;&#x17E;&#xAC; &#xEC;&#xB2;&#x2DC;&#xEB;&#xA6;&#xAC; (&#xEB;&#x8D;&#xB0;&#xEB;&#xAA;&#xA8;)');
-      loadList(); return;
-    }
+    
     var params = 'action=adminConfirm&row=' + row +
       '&type=' + type +
       '&confirmed=' + confirmed +
@@ -605,8 +599,7 @@
 
   // &#xE2;&#x201D;&#x20AC;&#xE2;&#x201D;&#x20AC; &#xED;&#x2DC;&#x201E;&#xED;&#x2122;&#xA9;&#xED;&#x152;&#x90; &#xE2;&#x201D;&#x20AC;&#xE2;&#x201D;&#x20AC;
   function loadDashboard() {
-    if (false) {
-      setTimeout(function(){ renderDashboard(demoData()); }, 500);
+    , 500);
       return;
     }
     var params = 'action=getTodayList&date=' + getTodayStr() + '&floor=' + encodeURIComponent(currentFloor);
