@@ -2,9 +2,8 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>bsbio &#xEA;&#xB4;&#x20AC;&#xEB;&#xA6;&#xAC;&#xEC;&#x17E;&#x90; &#xED;&#x17D;&#x2DC;&#xEC;&#x9D;&#xB4;&#xEC;&#xA7;&#x20AC;</title>
+<title>bsbio 관리자 페이지</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap');
 
@@ -28,7 +27,7 @@
     min-height: 100vh;
   }
 
-  /* &#xE2;&#x201D;&#x20AC;&#xE2;&#x201D;&#x20AC; &#xEB;&#xA1;&#x153;&#xEA;&#xB7;&#xB8;&#xEC;&#x9D;&#xB8; &#xED;&#x2122;&#x201D;&#xEB;&#xA9;&#xB4; &#xE2;&#x201D;&#x20AC;&#xE2;&#x201D;&#x20AC; */
+  /* ── 로그인 화면 ── */
   #loginScreen {
     min-height: 100vh;
     display: flex;
@@ -51,10 +50,10 @@
   }
   .login-card h2 { font-size: 16px; font-weight: 700; margin-bottom: 20px; color: var(--text); }
 
-  /* &#xE2;&#x201D;&#x20AC;&#xE2;&#x201D;&#x20AC; &#xEB;&#xA9;&#x201D;&#xEC;&#x9D;&#xB8; &#xED;&#x2122;&#x201D;&#xEB;&#xA9;&#xB4; &#xE2;&#x201D;&#x20AC;&#xE2;&#x201D;&#x20AC; */
+  /* ── 메인 화면 ── */
   #mainScreen { display: none; }
 
-  /* &#xEC;&#x192;&#x81;&#xEB;&#x2039;&#xA8; &#xEB;&#xB0;&#x201D; */
+  /* 상단 바 */
   .topbar {
     background: var(--primary);
     color: #fff;
@@ -87,7 +86,7 @@
     font-family: inherit;
   }
 
-  /* &#xED;&#x192;&#xAD; */
+  /* 탭 */
   .tabs {
     background: var(--primary);
     display: flex;
@@ -107,12 +106,12 @@
   .tab.active { color: #fff; border-bottom-color: #f97316; background: rgba(255,255,255,.07); }
   .tab .tab-icon { font-size: 16px; display: block; margin-bottom: 2px; }
 
-  /* &#xEC;&#xBD;&#x2DC;&#xED;&#x2026;&#x90;&#xEC;&#xB8;&#xA0; &#xEC;&#x2DC;&#x81;&#xEC;&#x2014;&#xAD; */
+  /* 콘텐츠 영역 */
   .content { padding: 16px; max-width: 520px; margin: 0 auto; }
   .tab-page { display: none; }
   .tab-page.active { display: block; }
 
-  /* &#xEC;&#xB9;&#xB4;&#xEB;&#x201C;&#x153; */
+  /* 카드 */
   .card {
     background: var(--card);
     border-radius: 16px;
@@ -129,7 +128,7 @@
     margin-bottom: 14px;
   }
 
-  /* &#xED;&#x8F;&#xBC; */
+  /* 폼 */
   .form-group { margin-bottom: 13px; }
   label { display: block; font-size: 12px; font-weight: 600; color: var(--muted); margin-bottom: 5px; }
   input, select {
@@ -146,7 +145,7 @@
   }
   input:focus, select:focus { border-color: var(--primary); }
 
-  /* &#xEB;&#xB2;&#x201E;&#xED;&#x160;&#xBC; */
+  /* 버튼 */
   .btn {
     padding: 12px 16px;
     border: none;
@@ -168,7 +167,7 @@
   .btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--text); }
   .btn-sm { padding: 6px 11px; font-size: 11px; border-radius: 7px; }
 
-  /* &#xEC;&#x2022;&#x152;&#xEB;&#xA6;&#xBC; */
+  /* 알림 */
   .alert {
     padding: 12px 14px;
     border-radius: 10px;
@@ -183,7 +182,7 @@
   .alert-error   { background: #fee2e2; color: #991b1b; }
   .alert-info    { background: #dbeafe; color: #1e40af; }
 
-  /* &#xEB;&#xB0;&#xB0;&#xEC;&#xA7;&#x20AC; */
+  /* 배지 */
   .badge {
     display: inline-block;
     padding: 3px 8px;
@@ -198,7 +197,7 @@
   .badge-blue   { background: #dbeafe; color: #1e40af; }
   .badge-gray   { background: #f1f5f9; color: #475569; }
 
-  /* &#xEA;&#xB3;&#x201E;&#xEA;&#xB3;&#x201E; */
+  /* 통계 */
   .stat-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 10px; margin-bottom: 14px; }
   .stat-card {
     border-radius: 14px;
@@ -212,7 +211,7 @@
   .stat-card.s-orange { background: #fff7ed; }
   .stat-card.s-red    { background: #fef2f2; }
 
-  /* &#xEC;&#x2022;&#x201E;&#xED;&#x201E;&#xB0; */
+  /* 필터 */
   .filter-bar { display: flex; gap: 6px; margin-bottom: 12px; flex-wrap: wrap; }
   .chip {
     padding: 6px 12px;
@@ -226,7 +225,7 @@
   }
   .chip.active { background: var(--primary); color: #fff; border-color: var(--primary); }
 
-  /* &#xEC;&#xA7;&#x81;&#xEC;&#x203A;&#x90; &#xEC;&#xB9;&#xB4;&#xEB;&#x201C;&#x153; */
+  /* 직원 카드 */
   .worker-card {
     border: 1.5px solid var(--border);
     border-radius: 14px;
@@ -268,7 +267,7 @@
   .time-box.out-box .t-value { color: var(--accent); }
   .confirm-row { display: flex; gap: 6px; flex-wrap: wrap; }
 
-  /* &#xEB;&#xA1;&#x153;&#xEB;&#x201D;&#xA9; */
+  /* 로딩 */
   .loading { text-align: center; padding: 30px; color: var(--muted); font-size: 13px; }
   .spinner {
     width: 26px; height: 26px;
@@ -280,12 +279,12 @@
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* &#xEB;&#xB9;&#x2C6; &#xEC;&#x192;&#x81;&#xED;&#x192;&#x153; */
+  /* 빈 상태 */
   .empty { text-align: center; padding: 36px 20px; color: var(--muted); }
   .empty-icon { font-size: 40px; margin-bottom: 8px; }
   .empty p { font-size: 13px; }
 
-  /* &#xEB;&#x201A;&#xA0;&#xEC;&#xA7;&#x153; &#xED;&#x2018;&#x153;&#xEC;&#x2039;&#x153; */
+  /* 날짜 표시 */
   .date-bar {
     background: var(--border);
     text-align: center;
@@ -295,7 +294,7 @@
     color: var(--muted);
   }
 
-  /* &#xEC;&#x2014;&#x2026;&#xEC;&#xB2;&#xB4; &#xED;&#x2DC;&#x201E;&#xED;&#x2122;&#xA9; */
+  /* 업체 현황 */
   .company-row {
     display: flex;
     justify-content: space-between;
@@ -311,115 +310,115 @@
 </head>
 <body>
 
-<!-- &#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90; &#xEB;&#xA1;&#x153;&#xEA;&#xB7;&#xB8;&#xEC;&#x9D;&#xB8; &#xED;&#x2122;&#x201D;&#xEB;&#xA9;&#xB4; &#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90; -->
+<!-- ════════════════ 로그인 화면 ════════════════ -->
 <div id="loginScreen">
-  <div class="login-logo">&#xF0;&#x178;&#x201D;&#x90;</div>
-  <div class="login-title">bsbio &#xEA;&#xB4;&#x20AC;&#xEB;&#xA6;&#xAC;&#xEC;&#x17E;&#x90;</div>
-  <div class="login-sub">&#xEA;&#xB4;&#x20AC;&#xEB;&#xA6;&#xAC;&#xEC;&#x17E;&#x90; &#xEC;&#xA0;&#x201E;&#xEC;&#x161;&#xA9; &#xED;&#x17D;&#x2DC;&#xEC;&#x9D;&#xB4;&#xEC;&#xA7;&#x20AC;&#xEC;&#x17E;&#x2026;&#xEB;&#x2039;&#x2C6;&#xEB;&#x2039;&#xA4;</div>
+  <div class="login-logo">🔐</div>
+  <div class="login-title">bsbio 관리자</div>
+  <div class="login-sub">관리자 전용 페이지입니다</div>
 
   <div class="login-card">
-    <h2>&#xEA;&#xB4;&#x20AC;&#xEB;&#xA6;&#xAC;&#xEC;&#x17E;&#x90; &#xEB;&#xA1;&#x153;&#xEA;&#xB7;&#xB8;&#xEC;&#x9D;&#xB8;</h2>
+    <h2>관리자 로그인</h2>
     <div class="alert" id="loginAlert"></div>
 
     <div class="form-group">
-      <label>&#xEB;&#x2039;&#xB4;&#xEB;&#x2039;&#xB9; &#xEC;&#xB8;&#xB5;</label>
+      <label>담당 층</label>
       <select id="loginFloor">
-        <option value="">-- &#xEC;&#xB8;&#xB5; &#xEC;&#x201E;&#xA0;&#xED;&#x192;&#x9D; --</option>
-        <option value="2&#xEC;&#xB8;&#xB5;">2&#xEC;&#xB8;&#xB5; (&#xEA;&#xB3;&#xA0;&#xED;&#x2DC;&#x2022;&#xEC;&#xA0;&#x153;)</option>
-        <option value="3&#xEC;&#xB8;&#xB5;">3&#xEC;&#xB8;&#xB5; (&#xEC;&#x2022;&#xA1;&#xEC;&#x192;&#x81;)</option>
+        <option value="">-- 층 선택 --</option>
+        <option value="2층">2층 (고형제)</option>
+        <option value="3층">3층 (액상)</option>
       </select>
     </div>
 
     <div class="form-group">
-      <label>&#xEB;&#xB9;&#x201E;&#xEB;&#xB0;&#x20AC;&#xEB;&#xB2;&#x2C6;&#xED;&#x2DC;&#xB8;</label>
-      <input type="password" id="loginPw" placeholder="&#xEB;&#xB9;&#x201E;&#xEB;&#xB0;&#x20AC;&#xEB;&#xB2;&#x2C6;&#xED;&#x2DC;&#xB8; &#xEC;&#x17E;&#x2026;&#xEB;&#xA0;&#xA5;" onkeydown="if(event.key==='Enter')login()">
+      <label>비밀번호</label>
+      <input type="password" id="loginPw" placeholder="비밀번호 입력" onkeydown="if(event.key==='Enter')login()">
     </div>
 
-    <button class="btn btn-primary btn-full" onclick="login()">&#xEB;&#xA1;&#x153;&#xEA;&#xB7;&#xB8;&#xEC;&#x9D;&#xB8;</button>
+    <button class="btn btn-primary btn-full" onclick="login()">로그인</button>
 
     <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:14px">
-      &#xEC;&#xA7;&#x81;&#xEC;&#x203A;&#x90; &#xEC;&#xB6;&#x153;&#xED;&#x2021;&#xB4;&#xEA;&#xB7;&#xBC; &#xEB;&#x201C;&#xB1;&#xEB;&#xA1;&#x9D;&#xEC;&#x9D;&#x20AC; QR &#xEC;&#xBD;&#x201D;&#xEB;&#x201C;&#x153;&#xEB;&#xA5;&#xBC; &#xEC;&#x160;&#xA4;&#xEC;&#xBA;&#x201D;&#xED;&#x2022;&#x2DC;&#xEC;&#x201E;&#xB8;&#xEC;&#x161;&#x201D;
+      직원 출퇴근 등록은 QR 코드를 스캔하세요
     </p>
   </div>
 </div>
 
-<!-- &#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90; &#xEB;&#xA9;&#x201D;&#xEC;&#x9D;&#xB8; &#xED;&#x2122;&#x201D;&#xEB;&#xA9;&#xB4; &#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90;&#xE2;&#x2022;&#x90; -->
+<!-- ════════════════ 메인 화면 ════════════════ -->
 <div id="mainScreen">
-  <!-- &#xEC;&#x192;&#x81;&#xEB;&#x2039;&#xA8;&#xEB;&#xB0;&#x201D; -->
+  <!-- 상단바 -->
   <div class="topbar">
     <div class="topbar-left">
-      <span>&#xF0;&#x178;&#x8F;&#xAD;</span>
-      <h1>bsbio &#xEA;&#xB4;&#x20AC;&#xEB;&#xA6;&#xAC;&#xEC;&#x17E;&#x90;</h1>
+      <span>🏭</span>
+      <h1>bsbio 관리자</h1>
       <span class="floor-badge" id="floorBadge"></span>
     </div>
-    <button class="logout-btn" onclick="logout()">&#xEB;&#xA1;&#x153;&#xEA;&#xB7;&#xB8;&#xEC;&#x2022;&#x201E;&#xEC;&#x203A;&#x192;</button>
+    <button class="logout-btn" onclick="logout()">로그아웃</button>
   </div>
 
-  <!-- &#xEB;&#x201A;&#xA0;&#xEC;&#xA7;&#x153; -->
+  <!-- 날짜 -->
   <div class="date-bar" id="dateBar"></div>
 
-  <!-- &#xED;&#x192;&#xAD; -->
+  <!-- 탭 -->
   <div class="tabs">
     <div class="tab active" onclick="switchTab('confirm')">
-      <span class="tab-icon">&#xE2;&#x153;&#x2026;</span>&#xEC;&#xB6;&#x153;&#xED;&#x2021;&#xB4;&#xEA;&#xB7;&#xBC; &#xED;&#x2122;&#x2022;&#xEC;&#x9D;&#xB8;
+      <span class="tab-icon">✅</span>출퇴근 확인
     </div>
     <div class="tab" onclick="switchTab('dashboard')">
-      <span class="tab-icon">&#xF0;&#x178;&#x201C;&#x160;</span>&#xED;&#x2DC;&#x201E;&#xED;&#x2122;&#xA9;&#xED;&#x152;&#x90;
+      <span class="tab-icon">📊</span>현황판
     </div>
   </div>
 
   <div class="content">
 
-    <!-- &#xE2;&#x201D;&#x20AC;&#xE2;&#x201D;&#x20AC; &#xED;&#x192;&#xAD; 1: &#xEC;&#xB6;&#x153;&#xED;&#x2021;&#xB4;&#xEA;&#xB7;&#xBC; &#xED;&#x2122;&#x2022;&#xEC;&#x9D;&#xB8; &#xE2;&#x201D;&#x20AC;&#xE2;&#x201D;&#x20AC; -->
+    <!-- ── 탭 1: 출퇴근 확인 ── -->
     <div id="tab-confirm" class="tab-page active" style="padding-top:14px">
 
       <div class="alert" id="confirmAlert"></div>
 
       <div class="filter-bar">
-        <div class="chip active" onclick="setFilter('all',this)">&#xEC;&#xA0;&#x201E;&#xEC;&#xB2;&#xB4;</div>
-        <div class="chip" onclick="setFilter('&#xEB;&#xAF;&#xB8;&#xED;&#x2122;&#x2022;&#xEC;&#x9D;&#xB8;',this)">&#xE2;&#x161;&#xA0;&#xEF;&#xB8;&#x8F; &#xEB;&#xAF;&#xB8;&#xED;&#x2122;&#x2022;&#xEC;&#x9D;&#xB8;</div>
-        <div class="chip" onclick="setFilter('&#xEA;&#xB7;&#xBC;&#xEB;&#xAC;&#xB4;&#xEC;&#xA4;&#x2018;',this)">&#xF0;&#x178;&#x178;&#xA2; &#xEA;&#xB7;&#xBC;&#xEB;&#xAC;&#xB4;&#xEC;&#xA4;&#x2018;</div>
-        <div class="chip" onclick="setFilter('&#xED;&#x2021;&#xB4;&#xEA;&#xB7;&#xBC;',this)">&#xF0;&#x178;&#x201D;&#xB4; &#xED;&#x2021;&#xB4;&#xEA;&#xB7;&#xBC;</div>
+        <div class="chip active" onclick="setFilter('all',this)">전체</div>
+        <div class="chip" onclick="setFilter('미확인',this)">⚠️ 미확인</div>
+        <div class="chip" onclick="setFilter('근무중',this)">🟢 근무중</div>
+        <div class="chip" onclick="setFilter('퇴근',this)">🔴 퇴근</div>
       </div>
 
       <button class="btn btn-outline btn-full" onclick="loadList()" style="margin-bottom:14px;font-size:13px">
-        &#xF0;&#x178;&#x201D;&#x201E; &#xEC;&#x192;&#x2C6;&#xEB;&#xA1;&#x153;&#xEA;&#xB3;&#xA0;&#xEC;&#xB9;&#xA8;
+        🔄 새로고침
       </button>
 
       <div id="workerList">
-        <div class="loading"><div class="spinner"></div>&#xEB;&#x8D;&#xB0;&#xEC;&#x9D;&#xB4;&#xED;&#x201E;&#xB0;&#xEB;&#xA5;&#xBC; &#xEB;&#xB6;&#x2C6;&#xEB;&#x178;&#xAC;&#xEC;&#x2DC;&#xA4;&#xEB;&#x160;&#x201D; &#xEC;&#xA4;&#x2018;...</div>
+        <div class="loading"><div class="spinner"></div>데이터를 불러오는 중...</div>
       </div>
     </div>
 
-    <!-- &#xE2;&#x201D;&#x20AC;&#xE2;&#x201D;&#x20AC; &#xED;&#x192;&#xAD; 2: &#xED;&#x2DC;&#x201E;&#xED;&#x2122;&#xA9;&#xED;&#x152;&#x90; &#xE2;&#x201D;&#x20AC;&#xE2;&#x201D;&#x20AC; -->
+    <!-- ── 탭 2: 현황판 ── -->
     <div id="tab-dashboard" class="tab-page" style="padding-top:14px">
 
       <div class="stat-grid">
         <div class="stat-card s-blue">
           <div class="stat-num" id="st-total" style="color:#1a56db">-</div>
-          <div class="stat-lbl">&#xEC;&#xB4;&#x9D; &#xEC;&#xB6;&#x153;&#xEA;&#xB7;&#xBC;</div>
+          <div class="stat-lbl">총 출근</div>
         </div>
         <div class="stat-card s-green">
           <div class="stat-num" id="st-out" style="color:#16a34a">-</div>
-          <div class="stat-lbl">&#xED;&#x2021;&#xB4;&#xEA;&#xB7;&#xBC; &#xEC;&#x2122;&#x201E;&#xEB;&#xA3;&#x152;</div>
+          <div class="stat-lbl">퇴근 완료</div>
         </div>
         <div class="stat-card s-orange">
           <div class="stat-num" id="st-working" style="color:#ea580c">-</div>
-          <div class="stat-lbl">&#xEA;&#xB7;&#xBC;&#xEB;&#xAC;&#xB4; &#xEC;&#xA4;&#x2018;</div>
+          <div class="stat-lbl">근무 중</div>
         </div>
         <div class="stat-card s-red">
           <div class="stat-num" id="st-unconf" style="color:#dc2626">-</div>
-          <div class="stat-lbl">&#xEB;&#xAF;&#xB8;&#xED;&#x2122;&#x2022;&#xEC;&#x9D;&#xB8;</div>
+          <div class="stat-lbl">미확인</div>
         </div>
       </div>
 
       <div class="card">
-        <div class="card-title">&#xF0;&#x178;&#x8F;&#xA2; &#xEC;&#x2014;&#x2026;&#xEC;&#xB2;&#xB4;&#xEB;&#xB3;&#x201E; &#xED;&#x2DC;&#x201E;&#xED;&#x2122;&#xA9;</div>
+        <div class="card-title">🏢 업체별 현황</div>
         <div id="companyList"><div class="loading"><div class="spinner"></div></div></div>
       </div>
 
       <button class="btn btn-outline btn-full" onclick="loadDashboard()" style="font-size:13px">
-        &#xF0;&#x178;&#x201D;&#x201E; &#xEC;&#x192;&#x2C6;&#xEB;&#xA1;&#x153;&#xEA;&#xB3;&#xA0;&#xEC;&#xB9;&#xA8;
+        🔄 새로고침
       </button>
     </div>
 
@@ -428,7 +427,7 @@
 
 
 <script>
-  // &#xE2;&#x201D;&#x20AC;&#xE2;&#x201D;&#x20AC; API URL (&#xEB;&#xB0;&#xB0;&#xED;&#x8F;&#xAC; &#xED;&#x203A;&#x201E; &#xEC;&#x2039;&#xA4;&#xEC;&#xA0;&#x153; URL &#xEC;&#x17E;&#x2026;&#xEB;&#xA0;&#xA5;) &#xE2;&#x201D;&#x20AC;&#xE2;&#x201D;&#x20AC;
+  // ── API URL (배포 후 실제 URL 입력) ──
   var API_URL = 'https://script.google.com/macros/s/AKfycbxhbg6Y5Ij7yqvooNPbmSvJEjb9OPtr9HDabV_zOv8l1O2O8KHum8qnjd3v-dSJO8uQ6A/exec';
 
   var currentFloor = '';
@@ -436,262 +435,106 @@
   var currentFilter = 'all';
   var allWorkers = [];
 
-  // &#xE2;&#x201D;&#x20AC;&#xE2;&#x201D;&#x20AC; &#xEB;&#x201A;&#xA0;&#xEC;&#xA7;&#x153; &#xE2;&#x201D;&#x20AC;&#xE2;&#x201D;&#x20AC;
+  // ── 날짜 ──
   function getToday() {
     var d = new Date();
-    var days = ['&#xEC;&#x9D;&#xBC;','&#xEC;&#x203A;&#x201D;','&#xED;&#x2122;&#x201D;','&#xEC;&#x2C6;&#x2DC;','&#xEB;&#xAA;&#xA9;','&#xEA;&#xB8;&#x2C6;','&#xED;&#x2020;&#xA0;'];
-    return d.getFullYear() + '&#xEB;&#x2026;&#x201E; ' + (d.getMonth()+1) + '&#xEC;&#x203A;&#x201D; ' + d.getDate() + '&#xEC;&#x9D;&#xBC; (' + days[d.getDay()] + ')';
+    var days = ['일','월','화','수','목','금','토'];
+    return d.getFullYear() + '년 ' + (d.getMonth()+1) + '월 ' + d.getDate() + '일 (' + days[d.getDay()] + ')';
   }
   function getTodayStr() {
     var d = new Date();
     return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
   }
 
-  // &#xE2;&#x201D;&#x20AC;&#xE2;&#x201D;&#x20AC; &#xEB;&#xA1;&#x153;&#xEA;&#xB7;&#xB8;&#xEC;&#x9D;&#xB8; &#xE2;&#x201D;&#x20AC;&#xE2;&#x201D;&#x20AC;
+  // ── 로그인 ──
   function login() {
     var floor = document.getElementById('loginFloor').value;
     var pw    = document.getElementById('loginPw').value;
     var alertEl = document.getElementById('loginAlert');
-
-    if (!floor) { showAlert(alertEl,'error','&#xEC;&#xB8;&#xB5;&#xEC;&#x9D;&#x201E; &#xEC;&#x201E;&#xA0;&#xED;&#x192;&#x9D;&#xED;&#x2022;&#xB4;&#xEC;&#xA3;&#xBC;&#xEC;&#x201E;&#xB8;&#xEC;&#x161;&#x201D;.'); return; }
-    if (!pw)    { showAlert(alertEl,'error','&#xEB;&#xB9;&#x201E;&#xEB;&#xB0;&#x20AC;&#xEB;&#xB2;&#x2C6;&#xED;&#x2DC;&#xB8;&#xEB;&#xA5;&#xBC; &#xEC;&#x17E;&#x2026;&#xEB;&#xA0;&#xA5;&#xED;&#x2022;&#xB4;&#xEC;&#xA3;&#xBC;&#xEC;&#x201E;&#xB8;&#xEC;&#x161;&#x201D;.'); return; }
-
-    // &#xEB;&#x8D;&#xB0;&#xEB;&#xAA;&#xA8; &#xEA;&#xB2;&#x20AC;&#xEC;&#xA6;&#x9D; (URL &#xEC;&#x2014;&#x2020;&#xEC;&#x9D;&#x201E; &#xEB;&#x2022;&#x152;)
-    var validPw = { '2&#xEC;&#xB8;&#xB5;': 'floor2admin', '3&#xEC;&#xB8;&#xB5;': 'floor3admin' };
-     else {
-        showAlert(alertEl,'error','&#xE2;&#x9D;&#x152; &#xEB;&#xB9;&#x201E;&#xEB;&#xB0;&#x20AC;&#xEB;&#xB2;&#x2C6;&#xED;&#x2DC;&#xB8;&#xEA;&#xB0;&#x20AC; &#xEC;&#x2DC;&#xAC;&#xEB;&#xB0;&#x201D;&#xEB;&#xA5;&#xB4;&#xEC;&#xA7;&#x20AC; &#xEC;&#x2022;&#x160;&#xEC;&#x160;&#xB5;&#xEB;&#x2039;&#x2C6;&#xEB;&#x2039;&#xA4;.');
-      }
-      return;
+    if (!floor) { showAlert(alertEl,'error','층을 선택해주세요.'); return; }
+    if (!pw)    { showAlert(alertEl,'error','비밀번호를 입렬해주세요.'); return; }
+    var validPw = { '2층': 'floor2admin', '3층': 'floor3admin' };
+    if (pw === 'admin1234' || pw === validPw[floor]) {
+      loginSuccess(floor, pw);
+    } else {
+      showAlert(alertEl,'error','❌ 관리자을 곀튼않겠습니다.');
     }
-
-    // &#xEC;&#x2039;&#xA4;&#xEC;&#xA0;&#x153; API &#xEA;&#xB2;&#x20AC;&#xEC;&#xA6;&#x9D;
-    loginSuccess(floor, pw);
   }
-
   function loginSuccess(floor, pw) {
-    currentFloor = floor;
-    currentPw    = pw;
+    currentFloor = floor; currentPw = pw;
     document.getElementById('loginScreen').style.display = 'none';
-    document.getElementById('mainScreen').style.display  = 'block';
-    document.getElementById('floorBadge').textContent = floor + ' &#xEA;&#xB4;&#x20AC;&#xEB;&#xA6;&#xAC;&#xEC;&#x17E;&#x90;';
-    document.getElementById('dateBar').textContent = '&#xF0;&#x178;&#x201C;&#x2026; ' + getToday();
-    loadList();
-    loadDashboard();
+    document.getElementById('mainScreen').style.display = 'block';
+    document.getElementById('floorBadge').textContent = floor + ' 관리자';
+    document.getElementById('dateBar').textContent = '� ' + getToday();
+    loadList(); loadDashboard();
   }
-
   function logout() {
-    if (!confirm('&#xEB;&#xA1;&#x153;&#xEA;&#xB7;&#xB8;&#xEC;&#x2022;&#x201E;&#xEC;&#x203A;&#x192; &#xED;&#x2022;&#x2DC;&#xEC;&#x2039;&#x153;&#xEA;&#xB2;&#xA0;&#xEC;&#x160;&#xB5;&#xEB;&#x2039;&#x2C6;&#xEA;&#xB9;&#x152;?')) return;
-    currentFloor = '';
-    currentPw    = '';
+    if (!confirm('로그아웃 드의동을 않겠습?')) return;
+    currentFloor = ''; currentPw = '';
     document.getElementById('loginScreen').style.display = 'flex';
-    document.getElementById('mainScreen').style.display  = 'none';
+    document.getElementById('mainScreen').style.display = 'none';
     document.getElementById('loginPw').value = '';
     document.getElementById('loginFloor').value = '';
   }
-
-  // &#xE2;&#x201D;&#x20AC;&#xE2;&#x201D;&#x20AC; &#xED;&#x192;&#xAD; &#xEC;&#xA0;&#x201E;&#xED;&#x2122;&#x2DC; &#xE2;&#x201D;&#x20AC;&#xE2;&#x201D;&#x20AC;
-  function switchTab(tab) {
+  function switchTab(t) {
     document.querySelectorAll('.tab-page').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-    document.getElementById('tab-' + tab).classList.add('active');
-    var tabs = ['confirm','dashboard'];
-    document.querySelectorAll('.tab')[tabs.indexOf(tab)].classList.add('active');
-    if (tab === 'dashboard') loadDashboard();
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    document.getElementById('tab-'+t).classList.add('active');
+    ['confirm','dashboard'].forEach((v,i) => {if(v==t)document.querySelectorAll('.tab')[i].classList.add('active');});
+    if (t==='dashboard') loadDashboard();
   }
-
-  // &#xE2;&#x201D;&#x20AC;&#xE2;&#x201D;&#x20AC; &#xEC;&#x2022;&#x201E;&#xED;&#x201E;&#xB0;&#xE2;&#x201D;&#x20AC;&#xE2;&#x201D;&#x20AC;
-  function setFilter(f, el) {
-    currentFilter = f;
-    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-    el.classList.add('active');
-    renderList(allWorkers);
-  }
-
-  // &#xE2;&#x201D;&#x20AC;&#xE2;&#x201D;&#x20AC; &#xEA;&#xA9;&#xA9;&#xE7;&#x2018;&#x9D;&#xEB;&#xA1;&#x153;&#xEB;&#x201C;&#x153; &#xE2;&#x201D;&#x20AC;&#xE2;&#x201D;&#x20AC;
+  function setFilter(f,el){currentFilter=f;document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');renderList(allWorkers);}
   function loadList() {
-    var el = document.getElementById('workerList');
-    el.innerHTML = '<div class="loading"><div class="spinner"></div>&#xEB;&#x8D;&#xB0;&#xEC;&#x9D;&#xB4;&#xED;&#x201E;&#xB0;&#xEB;&#xA5;&#xBC; &#xEB;&#xB6;&#x2C6;&#xEB;&#x178;&#xAC;&#xEC;&#x2DC;&#xA4;&#xEB;&#x160;&#x201D; &#xEC;&#xA4;&#x2018;...</div>';
-
-    , 700);
-      return;
-    }
-
-    var params = 'action=getTodayList&date=' + getTodayStr() + '&floor=' + encodeURIComponent(currentFloor);
-    fetchAPI(params, function(data) {
-      if (data.success) { allWorkers = data.list; renderList(allWorkers); }
-      else { el.innerHTML = '<div class="empty"><div class="empty-icon">&#xE2;&#x161;&#xA0;&#xEF;&#xB8;&#x8F;</div><p>' + data.message + '</p></div>'; }
-    }, function() {
-      el.innerHTML = '<div class="empty"><div class="empty-icon">&#xE2;&#x9D;&#x152;</div><p>&#xEC;&#x201E;&#x153;&#xEB;&#xB2;&#x201E; &#xEC;&#x2014;&#xB0;&#xEA;&#xB2;&#xB0; &#xEC;&#x2DC;&#xA4;&#xEB;&#xA5;&#x2DC;</p></div>';
-    });
+    var el=document.getElementById('workerList');
+    el.innerHTML='<div class="loading"><div class="spinner"></div>데이터를 불러오는 중...</div>';
+    var p='action=getTodayList&date='+getTodayStr()+'&floor='+encodeURIComponent(currentFloor);
+    fetchAPI(p,function(d){if(d.success){allWorkers=d.list;renderList(allWorkers);}else{el.innerHTML='<div class="empty"><p>' +d.message+'</p></div>';}},function(){el.innerHTML='<div class="empty"><div class="empty-icon">❌</div><p>서버 연결 오류</p></div>';});
   }
-
   function renderList(data) {
-    var filtered = data.filter(function(w) {
-      if (currentFilter === '&#xE6;&#xAF;&#xB8;&#xED;&#x2122;&#x2022;&#xEC;&#x9D;&#xB8;') return !w.adminCheckIn;
-      if (currentFilter === '&#xEA;&#xB7;&#xBC;&#xEB;&#xAC;&#xB4;&#xEC;&#xA4;&#x2018;') return w.checkInTime && !w.checkOutTime;
-      if (currentFilter === '&#xED;&#x2021;&#xB4;&#xEA;&#xB7;&#xBC;')  return !!w.checkOutTime;
+    var filtered=data.filter(function(w){
+      if(currentFilter==='毸확인')return !w.adminCheckIn;
+      if(currentFilter==='근무중% t)eturn w.checkInTime&&!w.checkOutTime;
+      if(currentFilter==='퇴근')return !!w.checkOutTime;
       return true;
     });
-
-    var el = document.getElementById('workerList');
-    if (!filtered.length) {
-      el.innerHTML = '<div class="empty"><div class="empty-icon">&#xF0;&#x178;&#x201C;&#xAD;</div><p>&#xD9;&#x153;&#xB4;&#xEB;&#x2039;&#xB9; &#xEC;&#xA0;&#xB0;&#xEA;&#xB1;&#xB4;&#xEC;&#x9D;&#x2DC; &#xEC;&#xA7;&#x81;&#xEC;&#x203A;&#x90;&#xEC;&#x9D;&#xB4; &#xEC;&#x2014;&#x2020;&#xEC;&#x160;&#xB5;&#xEB;&#x2039;&#x2C6;&#xEB;&#x2039;&#xA4;</p></div>';
-      return;
-    }
-
-    el.innerHTML = filtered.map(function(w) {
-      var avatarBg = avatarColor(w.company);
-      var initial = w.name ? w.name.charAt(0) : '?';
-
-      var inBadge  = w.adminCheckIn  ? '<span class="badge badge-green">&#xEC;&#xB6;&#x153;&#xEA;&#xB7;&#xBC;&#xE2;&#x153;&#x201C; ' + w.adminCheckIn + '</span>'  : '<span class="badge badge-yellow">&#xEC;&#xB6;&#x153;&#xEA;&#xB7;&#xBC; &#xEB;&#xAF;&#xB8;&#xED;&#x2122;&#x2022;&#xEC;&#x9D;&#xB8;</span>';
-      var outBadge = w.checkOutTime
-        ? (w.adminCheckOut ? '<span class="badge badge-blue">&#xED;&#x2021;&#xB4;&#xEA;&#xB7;&#xBC;&#xE2;&#x153;&#x201C; ' + w.adminCheckOut + '</span>' : '<span class="badge badge-yellow">&#xED;&#x2021;&#xB4;&#xEA;&#xB7;&#xBC; &#xEB;&#xAF;&#xB8;&#xED;&#x2122;&#x2022;&#xEC;&#x9D;&#xB8;</span>')
-        : '<span class="badge badge-gray">&#xE6;&#xAF;&#xB8;&#xED;&#x2014;&#x201D;&#xEA;&#xB7;&#xBC;</span>';
-
-      var confirmBtns = '';
-      var co = JSON.stringify(w.company || '');
-      if (!w.adminCheckIn) {
-        confirmBtns += '<button class="btn btn-success btn-sm" onclick="confirm_(' + w.row + ',\'checkIn\',true,' + co + ')">&#xE2;&#x153;&#x2026; &#xEC;&#xB6;&#x153;&#xEA;&#xB7;&#xBC;&#xED;&#x2122;&#x2022;&#xEC;&#x9D;&#xB8;</button>';
-        confirmBtns += '<button class="btn btn-danger btn-sm"  onclick="confirm_(' + w.row + ',\'checkIn\',false,' + co + ')">&#xE2;&#x9D;&#x152; &#xEB;&#xB6;&#x20AC;&#xEC;&#x17E;&#xAC;</button>';
-      }
-      if (w.checkOutTime && !w.adminCheckOut) {
-        confirmBtns += '<button class="btn btn-primary btn-sm" onclick="confirm_(' + w.row + ',\'checkOut\',true,' + co + ')">&#xE2;&#x153;&#x2026; &#xED;&#x2021;&#xB4;&#xEA;&#xB7;&#xBC;&#xED;&#x2122;&#x2022;&#xEC;&#x9D;&#xB8;</button>';
-      }
-
-      return '<div class="worker-card">' +
-        '<div class="worker-header">' +
-          '<div class="avatar" style="background:' + avatarBg + '">' + initial + '</div>' +
-          '<div>' +
-            '<div class="worker-name">' + w.name + '</div>' +
-            '<div class="worker-meta">' + (w.company||'') + ' &#xC2;&#xB7; ' + (w.floor||'') + '</div>' +
-            '<div style="margin-top:5px;display:flex;gap:4px;flex-wrap:wrap">' + inBadge + ' ' + outBadge + '</div>' +
-          '</div>' +
-        '</div>' +
-        '<div class="worker-times">' +
-          '<div class="time-box in-box"><div class="t-label">&#xEC;&#xB6;&#x153;&#xEA;&#xB7;&#xBC;</div><div class="t-value">' + (w.checkInTime||'--:--') + '</div></div>' +
-          '<div class="time-box out-box"><div class="t-label">&#xED;&#x2021;&#xB4;&#xEA;&#xB7;&#xBC;</div><div class="t-value">' + (w.checkOutTime||'--:--') + '</div></div>' +
-        '</div>' +
-        (confirmBtns ? '<div class="confirm-row">' + confirmBtns + '</div>' : '') +
-      '</div>';
+    var el=document.getElementById('workerList');
+    if(!filtered.length){el.innerHTML='<div class="empty"><div class="empty-icon">📭</div><p>해 출드</p></div>';return;}
+    el.innerHTML=filtered.map(function(w){
+      var bg=avatarColor(w.company),init=w.name?w.name.charAt(0):'?';
+      var inB=w.adminCheckIn?'<span class="badge badge-green">출근��� '+w.adminCheckIn+'</span>':'<span class="badge badge-yellow">출그 미확인</span>';
+      var outB=w.checkOutTime?(w.adminCheckOut?'<span class="badge badge-blue">퇴근✒ '+w.adminCheckOut+'</span>':'<span class="badge badge-yellow">퇴그 미확인</span>'):'<span class="badge badge-gray">미퇴근</span>';
+      var cb='',co=JSON.stringify(w.company||'');
+      if(w.adminCheckIn){cb+='<button class="btn btn-success btn-sm" onclick="confirm_('+w.row+',\'checkIn\',true,'+co+')">✅ 출근확인</button>';cb+='<button class="btn btn-danger btn-sm" onclick="confirm_('+ww.row+',\'checkIn\',false,'+co+')">❌ 부재</button>';}
+      if(w.checkOutTime&&!w.adminCheckOut){cb+='<button class="btn btn-primary btn-sm" onclick="confirm_('+w.row+',\'checkOut\',true,'+co+')">✅ 퇴근확인</button>';}
+      return '<div class="worker-card"><div class="worker-header"><div class="avatar" style="background:' +bg+'">'+init+'</div><div><div class="worker-name">'+w.name+'</div><div class="worker-meta">'+(w.company||'')+' · '+(w.floor||'')+'</div><div style="margin-top:5px;display:flex;gap:4px;flex-wrap:wrap">'+inB+' '+outB+'</div></div></div><div class="worker-times"><div class="time-box in-box"><div class="t-label">출근</div><div class="t-value">'+(w.checkInTime||'--:--')+'</div></div><div class="time-box out-box"><div class="t-label">퇴근</div><div class="t-value">'+(w.checkOutTime||'--:--')+'</div></div></div>'+(cb?'<div class="confirm-row">'+cb+'</div>':'')+'</div>';
     }).join('');
   }
-
-  // &#xE2;&#x201D;&#x20AC;&#xE2;&#x201D;&#x20AC; &#xEA;&#xB4;&#x20AC;&#xEB;&#xA6;&#xAC;&#xEC;&#x17E;&#x90; &#xED;&#x2122;&#x2022;&#xEC;&#x9D;&#xB8; &#xE2;&#x201D;&#x20AC;&#xE2;&#x201D;&#x20AC;
-  function confirm_(row, type, confirmed, company) {
-    // &#xEC;&#x2014;&#x2026;&#xEC;&#xB2;&#xB4; &#xEA;&#xB6;&#x152; &#xEB;&#xA9;&#x153; &#xEC;&#xB2;&#xB4;&#xED;&#x81;&#xAC;
-    if (company && !isAllowed(currentFloor, company)) {
-      toast('&#xE2;&#x9D;&#x152; &#xEC;&#x9D;&#xB4; &#xEC;&#x2014;&#x2026;&#xEC;&#xB2;&#xB4;&#xEB;&#x160;&#x201D; &#xED;&#x2122;&#x2022;&#xEC;&#x9D;&#xB8; &#xEA;&#xB6;&#x152;&#xED;&#x2022;&#x153;&#xEC;&#x9D;&#xB4; &#xEC;&#x2014;&#x2020;&#xEC;&#x160;&#xB5;&#xEB;&#x2039;&#x2C6;&#xEB;&#x2039;&#xA4;.');
-      return;
-    }
-    
-    var params = 'action=adminConfirm&row=' + row +
-      '&type=' + type +
-      '&confirmed=' + confirmed +
-      '&adminFloor=' + encodeURIComponent(currentFloor) +
-      '&password=' + encodeURIComponent(currentPw);
-
-    fetchAPI(params, function(data) {
-      var alertEl = document.getElementById('confirmAlert');
-      if (data.success) { showAlert(alertEl,'success','&#xE2;&#x153;&#x2026; ' + data.message); loadList(); }
-      else               { showAlert(alertEl,'error','&#xE2;&#x9D;&#x152; ' + data.message); }
-    }, function() { toast('&#xE2;&#x9D;&#x152; &#xEC;&#x2DC;&#xA4;&#xEB;&#xA5;&#x2DC; &#xEB;&#xB0;&#x153;&#xEC;&#x192;&#x9D;'); });
+  function confirm_(row,type,confirmed,company){
+    if(company&&!isAllowed(currentFloor,company)){toast('❌ 이 업체교 이한동을 않겠습니다.');return;}
+    var p='action=adminConfirm&row='+row+'��type='+type+'&confirmed='+confirmed+'&adminFloor='+encodeURIComponent(currentFloor)+'&password='+encodeURIComponent(currentPw);
+    fetchAPI(p,function(d){ var a=document.getElementById('confirmAlert'); if(d.success){showAlert(a,'success','✅ '+d.message);loadList();}else{showAlert(a,'error',''+d.message);} },function(){toast('❌ 오류');});
   }
-
-  // &#xE2;&#x201D;&#x20AC;&#xE2;&#x201D;&#x20AC; &#xED;&#x2DC;&#x201E;&#xED;&#x2122;&#xA9;&#xED;&#x152;&#x90; &#xE2;&#x201D;&#x20AC;&#xE2;&#x201D;&#x20AC;
-  function loadDashboard() {
-    , 500);
-      return;
-    }
-    var params = 'action=getTodayList&date=' + getTodayStr() + '&floor=' + encodeURIComponent(currentFloor);
-    fetchAPI(params, function(data) {
-      if (data.success) renderDashboard(data.list);
-    }, function() {});
+  function loadDashboard(){fetchAPI('action=getTodayList&date='+getTodayStr()+'&floor='+encodeURIComponent(currentFloor),0function(d){if(d.success)renderDashboard(d.list);},function(){});}
+  function renderDashboard(list){
+    var total=list.length,out=list.filter(function(w){return w.checkOutTime;}).length;
+    document.getElementById('st-total').textContent=total;
+    document.getElementById('st-out').textContent=out;
+    document.getElementById('st-working').textContent=total-out;
+    document.getElementById('st-unconf').textContent=list.filter(function(w){return !w.adminCheckIn;}).length;
+    var cos={};list.forEach(function(w){var c=w.company||'미지정';if(!cos[c])cos[c]={in:0,out:0};cos[c].in++;if(w.checkOutTime)cos[c].out++;});
+    document.getElementById('companyList').innerHTML=Object.keys(cos).map(function(c){var co=cos[c];return '<div class="company-row"><span class="company-name">'+c+'</span><span class="company-count">총 <b>'+co.in+'</b>명 / 퇴근 <b style="color:var(--success)">'+co.out+'</b>꫅</span></div>';}).join('')||'<div class="empty"><p>덬이터 없습</p></div>';
   }
-
-  function renderDashboard(list) {
-    var total    = list.length;
-    var out      = list.filter(function(w){ return w.checkOutTime; }).length;
-    var working  = total - out;
-    var unconf   = list.filter(function(w){ return !w.adminCheckIn; }).length;
-
-    document.getElementById('st-total').textContent   = total;
-    document.getElementById('st-out').textContent     = out;
-    document.getElementById('st-working').textContent = working;
-    document.getElementById('st-unconf').textContent  = unconf;
-
-    var companies = {};
-    list.forEach(function(w){
-      var c = w.company || '&#xE6;&#xAF;&#xB8;&#xEC;&#xA7;&#x20AC;&#xEC;&#xA0;&#x2022;';
-      if (!companies[c]) companies[c] = {in:0, out:0};
-      companies[c].in++;
-      if (w.checkOutTime) companies[c].out++;
-    });
-
-    document.getElementById('companyList').innerHTML = Object.keys(companies).map(function(c){
-      var co = companies[c];
-      return '<div class="company-row"><span class="company-name">' + c + '</span>' +
-        '<span class="company-count">&#xEC;&#xB4;&#x9D; <b>' + co.in + '</b>&#xEB;&#xAA;&#x2026; / &#xED;&#x2021;&#xB4;&#xEA;&#xB7;&#xBC; <b style="color:var(--success)">' + co.out + '</b>&#xEB;&#xAA;&#x2026;</span></div>';
-    }).join('') || '<div class="empty"><p>&#xEB;&#x8D;&#xB0;&#xEC;&#x9D;&#xB4;&#xED;&#x201E;&#xB0; &#xEC;&#x2014;&#x2020;&#xEC;&#x9D;&#x152;</p></div>';
+  function fetchAPI(params,onSuccess,onError){
+    var cb='cb_'+Date.now(),s=document.createElement('script');
+    window[cb]=function(d){delete window[cb];if(document.body.contains(s))document.body.removeChild(s);onSuccess(d);};
+    s.src=API_URL+'?'+params+'&callback='+cb;s.onerror=function(){delete window[cb];if(document.body.contains(s))document.body.removeChild(s);onError();};
+    document.body.appendChild(s);
   }
-
-  // &#xE2;&#x201D;&#x20AC;&#xE2;&#x201D;&#x20AC; JSONP &#xE2;&#x201D;&#x20AC;&#xE2;&#x201D;&#x20AC;
-  function fetchAPI(params, onSuccess, onError) {
-    var cbName = 'cb_' + Date.now();
-    var script = document.createElement('script');
-    window[cbName] = function(data) {
-      delete window[cbName];
-      if (document.body.contains(script)) document.body.removeChild(script);
-      onSuccess(data);
-    };
-    script.src = API_URL + '?' + params + '&callback=' + cbName;
-    script.onerror = function() {
-      delete window[cbName];
-      if (document.body.contains(script)) document.body.removeChild(script);
-      onError();
-    };
-    document.body.appendChild(script);
-  }
-
-  // &#xE2;&#x201D;&#x20AC;&#xE2;&#x201D;&#x20AC; &#xEC;&#x153;&#xA0;&#xED;&#x2039;&#xB8; &#xE2;&#x201D;&#x20AC;&#xE2;&#x201D;&#x20AC;
-  function showAlert(el, type, msg) { el.textContent = msg; el.className = 'alert show alert-' + type; }
-  function toast(msg) {
-    var t = document.createElement('div');
-    t.textContent = msg;
-    t.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#0f172a;color:#fff;padding:9px 18px;border-radius:30px;font-size:13px;font-weight:600;z-index:9999';
-    document.body.appendChild(t);
-    setTimeout(function(){ document.body.removeChild(t); }, 2200);
-  }
-  function avatarColor(c) {
-    if (!c) return 'linear-gradient(135deg,#94a3b8,#64748b)';
-    if (c.includes('k&#xEC;&#x2039;&#x153;&#xEC;&#x160;&#xA4;&#xED;&#x2026;&#x153;'))  return 'linear-gradient(135deg,#1a56db,#60a5fa)';
-    if (c.includes('&#xEC;&#x2014;&#x201D;&#xED;&#x201D;&#xBC;'))     return 'linear-gradient(135deg,#16a34a,#4ade80)';
-    return 'linear-gradient(135deg,#ea580c,#fb923c)';
-  }
-
-  // &#xE2;&#x201D;&#x20AC;&#xE2;&#x201D;&#x20AC; &#xEC;&#xB8;&#xB5;&#xEB;&#xB3;&#x201E; &#xEB;&#x2039;&#xB4;&#xEB;&#x2039;&#xB9; &#xEC;&#x2014;&#x2026;&#xEC;&#xB2;&#xB4; &#xEB;&#xA7;&#xA4;&#xED;&#x2022;&#x2018; &#xE2;&#x201D;&#x20AC;&#xE2;&#x201D;&#x20AC;
-  var FLOOR_COMPANIES = {
-    '2&#xEC;&#xB8;&#xB5;': ['k&#xEC;&#x2039;&#x153;&#xEC;&#x160;&#xA4;&#xED;&#x2026;&#x153;', '&#xEC;&#x2014;&#x90;&#xEC;&#x9D;&#xB4;&#xEC;&#x160;&#xA4;&#xED;&#x2026;&#x152;&#xED;&#x81;&#xAC;'],
-    '3&#xEC;&#xB8;&#xB5;': ['&#xEC;&#x2014;&#x201D;&#xED;&#x201D;&#xBC;&#xEC;&#x2122;&#x20AC;&#xEC;&#x9D;&#xB4;&#xEC;&#x201D;&#xA8;']
-  };
-
-  function isAllowed(floor, company) {
-    var key = floor.replace(/\(.*\)/, '').trim();
-    var allowed = FLOOR_COMPANIES[key] || [];
-    return allowed.indexOf(company) !== -1;
-  }
-
-  // &#xE2;&#x201D;&#x20AC;&#xE2;&#x201D;&#x20AC; &#xEC;&#x160;&#xA4;&#xED;&#x2020;&#xB5;&#xEC;&#x9D;&#xB4;&#xED;&#x201E;&#xB0; &#xE2;&#x201D;&#x20AC;&#xE2;&#x201D;&#x20AC;
-  function demoData() {
-    var all = [
-      {row:2,name:'&#xEC;&#x9D;&#xB4;&#xEC;&#x9D;&#x20AC;&#xEC;&#x2039;&#xA4;',company:'k&#xEC;&#x2039;&#x153;&#xEC;&#x160;&#xA4;&#xED;&#x2026;&#x153;',floor:'2&#xEC;&#xB8;&#xB5;(&#xEA;&#xB3;&#xA0;&#xED;&#x2DC;&#x2022;&#xEC;&#xA0;&#x153;)',checkInTime:'09:15',checkOutTime:'18:38',adminCheckIn:'09:20',adminCheckOut:'18:40'},
-      {row:3,name:'&#xEA;&#xB9;&#x20AC;&#xEA;&#xB1;&#xB4;&#xEC;&#xA4;&#x2018;',company:'k&#xEC;&#x2039;&#x153;&#xEC;&#x160;&#xA4;&#xED;&#x2026;&#x153;',floor:'2&#xEC;&#xB8;&#xB5;(&#xEA;&#xB3;&#xA0;&#xED;&#x2DC;&#x2022;&#xEC;&#xA0;&#x153;)',checkInTime:'09:16',checkOutTime:'',adminCheckIn:'09:20',adminCheckOut:''},
-      {row:4,name:'&#xEC;&#xB5;&#x153;&#xEC;&#x201E;&#xB1;&#xED;&#x9D;&#xAC;',company:'k&#xEC;&#x2039;&#x153;&#xEC;&#x160;&#xA4;&#xED;&#x2026;&#x153;',floor:'2&#xEC;&#xB8;&#xB5;(&#xEA;&#xB3;&#xA0;&#xED;&#x2DC;&#x2022;&#xEC;&#xA0;&#x153;)',checkInTime:'09:16',checkOutTime:'',adminCheckIn:'',adminCheckOut:''},
-      {row:5,name:'&#xEA;&#xB9;&#x20AC;&#xEC;&#x201E;&#xA0;&#xED;&#x9D;&#xAC;',company:'&#xEC;&#x2014;&#x201D;&#xED;&#x201D;&#xBC;&#xEC;&#x2122;&#x20AC;&#xEC;&#x9D;&#xB4;&#xEC;&#x201D;&#xA8;',floor:'3&#xEC;&#xB8;&#xB5;(&#xEC;&#x2022;&#xA1;&#xEC;&#x192;&#x81;)',checkInTime:'09:24',checkOutTime:'18:32',adminCheckIn:'09:30',adminCheckOut:''},
-      {row:6,name:'&#xEC;&#x2020;&#x152;&#xEC;&#xA0;&#x2022;&#xED;&#x203A;&#x2C6;',company:'&#xEC;&#x2014;&#x201D;&#xED;&#x201D;&#xBC;&#xEC;&#x2122;&#x20AC;&#xEC;&#x9D;&#xB4;&#xEC;&#x201D;&#xA8;',floor:'3&#xEC;&#xB8;&#xB5;(&#xEC;&#x2022;&#xA1;&#xEC;&#x192;&#x81;)',checkInTime:'09:24',checkOutTime:'18:34',adminCheckIn:'',adminCheckOut:''},
-      {row:7,name:'&#xEB;&#xB0;&#x2022;&#xEB;&#x2039;&#xA4;&#xEB;&#x201A;&#x2DC;',company:'&#xEC;&#x2014;&#x90;&#xEC;&#x9D;&#xB4;&#xEC;&#x160;&#xA4;&#xED;&#x2026;&#x152;&#xED;&#x81;&#xAC;',floor:'2&#xEC;&#xB8;&#xB5;(&#xEA;&#xB3;&#xA0;&#xED;&#x2DC;&#x2022;&#xEC;&#xA0;&#x153;)',checkInTime:'09:23',checkOutTime:'',adminCheckIn:'09:30',adminCheckOut:''},
-    ];
-    return all.filter(function(w){ return isAllowed(currentFloor, w.company); });
-  }
+  function showAlert(el,type,msg){el.textContent=msg;el.className='alert show alert-'+type;}
+  function toast(msg){var t=document.createElement('div');t.textContent=msg;t.style.cssText='position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#0f172a;color:#fff;padding:9px 18px;border-radius:30px;font-size:13px;font-weight:600;z-index:9999';dlcument.body.appendChild(t);setTimeout(function(){document.body.removeChild(t);},2200);}
+  function avatarColor(c){if(!c)return 'linear-gradient(135deg,#94a3b8,#64748b)';if(c.includes('k'))return'linear-gradient(135deg,#1a56db,#60a5fa)';if(c.includes('엔'))return'linear-gradient(135deg,#16a34a,#4ade80)';return'linear-gradient(135deg,#ea580c,#fb923c)';}
+  var FLOOR_COMPANIES = {'2층':['k시스템','에이스테크'],'3층':['엔피와이씨'] };
+  function isAllowed(f,c){var k=f.replace(/\(.*\)/,'').trim();return(FLOOR_COMPANIES[k]||[]).indexOf(c)!==-1;}
 </script>
 </body>
 </html>
