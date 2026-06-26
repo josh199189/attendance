@@ -141,7 +141,7 @@ function fetchAPI(params,onSuccess,onError){var cb="cb_"+Date.now()+"_"+(window.
 function showAlert(el,type,msg){el.textContent=msg;el.className="alert show alert-"+type;}
 function toast(msg){var t=document.createElement("div");t.textContent=msg;t.style.cssText="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#0f172a;color:#fff;padding:9px 18px;border-radius:30px;font-size:13px;font-weight:600;z-index:9999";document.body.appendChild(t);setTimeout(function(){document.body.removeChild(t);},2200);}
 function avatarColor(c){if(!c)return"linear-gradient(135deg,#94a3b8,#64748b)";if(c.includes("하나인"))return"linear-gradient(135deg,#1a56db,#60a5fa)";if(c.includes("에이스"))return"linear-gradient(135deg,#16a34a,#4ade80)";return"linear-gradient(135deg,#ea580c,#fb923c)";}
-var FLOOR_COMPANIES={"2층":["하나인 솔루션","에이스테크"],"3층":["엑상"]};
+var FLOOR_COMPANIES={"2층":["하나인 솔루션","에이스테크","k시스템","다온컴퍼니"],"3층":["엔피와이씨","엑상"]};
 function isAllowed(f,c){var k=f.replace(/\(.*\)/,"").trim();return(FLOOR_COMPANIES[k]||[]).indexOf(c)!==-1;}
 </script>
 </body>
