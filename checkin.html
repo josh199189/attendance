@@ -1,4 +1,4 @@
-f<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
@@ -71,17 +71,6 @@ body{background:radial-gradient(ellipse at 50% -20%,rgba(0,230,118,.08) 0%,trans
       <label>업체명 *</label>
       <select id="f-company">
         <option value="">-- 업체 선택 --</option>
-        <option value="하나인 솔루션">하나인 솔루션</option>
-        <option value="엔피와이씨">엔피와이씨</option>
-        <option value="에이스테크">에이스테크</option>
-      </select>
-    </div>
-    <div class="field">
-      <label>근무 층 *</label>
-      <select id="f-floor">
-        <option value="">-- 층 선택 --</option>
-        <option value="2층">2층 (고형제)</option>
-        <option value="3층">3층 (액상)</option>
       </select>
     </div>
 
@@ -95,7 +84,16 @@ var SCRIPT_URL='https://script.google.com/macros/s/AKfycbxhbg6Y5Ij7yqvooNPbmSvJE
 var BASE_LAT=37.3153635,BASE_LNG=126.7874938,MAX_DISTANCE=100;
 var lat=null,lng=null,gpsReady=false,withinRange=false;
 
-document.addEventListener('DOMContentLoaded',function(){tick();setInterval(tick,1000);startGPS();restore()});
+document.addEventListener('DOMContentLoaded',function(){tick();setInterval(tick,1000);startGPS();loadCompanies(restore)});
+
+var DEFAULT_COMPANIES=['하나인 솔루션','엔피와이씨','에이스테크'];
+function fillCompanies(list){var sel=document.getElementById('f-company');var cur=sel.value;sel.innerHTML='<option value="">-- 업체 선택 --</option>';list.forEach(function(c){var o=document.createElement('option');o.value=c;o.textContent=c;sel.appendChild(o)});if(cur)sel.value=cur}
+function loadCompanies(done){
+  fillCompanies(DEFAULT_COMPANIES);if(done)done();
+  callAPI({action:'getCompanies'},function(err,res){
+    if(!err&&res&&res.success&&Array.isArray(res.companies)&&res.companies.length){fillCompanies(res.companies);if(done)done();}
+  });
+}
 
 function tick(){var n=new Date();document.getElementById('clock').textContent=n.toLocaleTimeString('ko-KR',{hour12:false});document.getElementById('clock-date').textContent=n.toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric',weekday:'long'})}
 
@@ -134,18 +132,16 @@ function doSubmit(){
   var name=document.getElementById('f-name').value.trim();
   var phone=document.getElementById('f-phone').value.trim();
   var company=document.getElementById('f-company').value;
-  var floor=document.getElementById('f-floor').value;
 
   if(!name||!phone)return toast('이름과 전화번호를 입력해주세요.','error');
   if(!company)return toast('업체를 선택해주세요.','error');
-  if(!floor)return toast('근무 층을 선택해주세요.','error');
   if(!gpsReady)return toast('GPS 위치를 확인 중입니다. 잠시 후 다시 시도해주세요.','error');
   if(!withinRange)return toast('현장 반경 100m 이내에서만 출근 등록이 가능합니다.','error');
 
   var btn=document.getElementById('btn');btn.disabled=true;btn.innerHTML='<span class="spinner"></span> 처리 중...';
-  callAPI({action:'checkIn',name:name,phone:phone,company:company,floor:floor,lat:String(lat),lng:String(lng)},function(err,res){
+  callAPI({action:'checkIn',name:name,phone:phone,company:company,lat:String(lat),lng:String(lng)},function(err,res){
     if(err)toast(err.message,'error');
-    else if(res.success){toast(res.message,'success');save(name,phone,company,floor)}
+    else if(res.success){toast(res.message,'success');save(name,phone,company)}
     else toast(res.message,'error');
     btn.disabled=false;btn.innerHTML='🟢 출근 등록';
   });
@@ -153,9 +149,9 @@ function doSubmit(){
 
 function toast(m,t){var e=document.getElementById('toast');e.textContent=m;e.className='toast '+t+' show';setTimeout(function(){e.classList.remove('show')},4000)}
 
-function save(n,p,c,f){try{document.cookie='ac='+encodeURIComponent(JSON.stringify({name:n,phone:p,company:c,floor:f}))+';max-age=2592000;path=/'}catch(e){}}
+function save(n,p,c){try{document.cookie='ac='+encodeURIComponent(JSON.stringify({name:n,phone:p,company:c}))+';max-age=2592000;path=/'}catch(e){}}
 
-function restore(){try{var m=document.cookie.match(/ac=([^;]+)/);if(m){var d=JSON.parse(decodeURIComponent(m[1]));if(d.name)document.getElementById('f-name').value=d.name;if(d.phone)document.getElementById('f-phone').value=d.phone;if(d.company){var sel=document.getElementById('f-company');for(var i=0;i<sel.options.length;i++){if(sel.options[i].value===d.company){sel.selectedIndex=i;break}}}if(d.floor){var fsel=document.getElementById('f-floor');for(var j=0;j<fsel.options.length;j++){if(fsel.options[j].value===d.floor){fsel.selectedIndex=j;break}}}}}catch(e){}}
+function restore(){try{var m=document.cookie.match(/ac=([^;]+)/);if(m){var d=JSON.parse(decodeURIComponent(m[1]));if(d.name)document.getElementById('f-name').value=d.name;if(d.phone)document.getElementById('f-phone').value=d.phone;if(d.company){var sel=document.getElementById('f-company');for(var i=0;i<sel.options.length;i++){if(sel.options[i].value===d.company){sel.selectedIndex=i;break}}}}}catch(e){}}
 </script>
 </body>
 </html>
