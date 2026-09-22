@@ -161,7 +161,8 @@ function login(){
   fetchAPI("action=adminLogin&password="+encodeURIComponent(p),function(d){
     btn.disabled=false;btn.textContent="로그인";
     if(d&&d.success){loginSuccess(p);return;}
-    if(d&&d.unknownAction){ if(p===FALLBACK_PASSWORD)loginSuccess(p);else showAlert(a,"error","비밀번호가 맞지 않습니다.");return; }
+    var unknown=!d||d.unknownAction||/알 수 없는 액션|unknown/i.test(String(d.message||""));
+    if(unknown){ if(p===FALLBACK_PASSWORD)loginSuccess(p);else showAlert(a,"error","서버가 아직 구버전입니다. Apps Script 새 버전 배포 전에는 admin1234만 사용 가능합니다.");return; }
     showAlert(a,"error",(d&&d.message)||"비밀번호가 맞지 않습니다.");
   },function(){
     btn.disabled=false;btn.textContent="로그인";
